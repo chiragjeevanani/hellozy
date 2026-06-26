@@ -1,0 +1,9 @@
+import React from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import { isAuthenticated } from '../utils/adminAuth';
+
+export default function AdminRoutes() {
+  const auth = isAuthenticated();
+  
+  return auth ? <Outlet /> : <Navigate to="/admin/login" replace />;
+}

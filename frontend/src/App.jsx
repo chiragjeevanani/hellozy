@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import LandingPage from './modules/landing/pages/LandingPage';
 import RegistrationPage from './modules/registration/pages/RegistrationPage';
 import SuccessScreen from './modules/registration/components/shared/SuccessScreen';
-import RegistrationsView from './modules/admin/components/RegistrationsView';
 import AboutPage from './modules/landing/pages/AboutPage';
 import FaqsPage from './modules/landing/pages/FaqsPage';
 import BlogPage from './modules/landing/pages/BlogPage';
@@ -13,6 +12,14 @@ import PrivacyPage from './modules/landing/pages/PrivacyPage';
 import RefundPage from './modules/landing/pages/RefundPage';
 import CancellationPage from './modules/landing/pages/CancellationPage';
 import Lenis from 'lenis';
+
+// Admin panel routing imports
+import AdminRoutes from './modules/admin/routes/AdminRoutes';
+import AdminLayout from './modules/admin/components/AdminLayout';
+import AdminLoginPage from './modules/admin/pages/AdminLoginPage';
+import DashboardPage from './modules/admin/pages/DashboardPage';
+import RegistrationsPage from './modules/admin/pages/RegistrationsPage';
+import SettingsPage from './modules/admin/pages/SettingsPage';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -52,7 +59,17 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/register/success" element={<SuccessScreen />} />
-        <Route path="/admin/registrations" element={<RegistrationsView />} />
+        
+        {/* Admin Section */}
+        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route element={<AdminRoutes />}>
+          <Route element={<AdminLayout />}>
+            <Route path="/admin" element={<DashboardPage />} />
+            <Route path="/admin/registrations" element={<RegistrationsPage />} />
+            <Route path="/admin/settings" element={<SettingsPage />} />
+          </Route>
+        </Route>
+
         <Route path="/about" element={<AboutPage />} />
         <Route path="/faqs" element={<FaqsPage />} />
         <Route path="/blog" element={<BlogPage />} />
