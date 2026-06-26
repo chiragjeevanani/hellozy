@@ -45,6 +45,7 @@ export default function Navbar() {
             <Link to="/faqs" className="hover:text-accent transition-colors">FAQs</Link>
             <Link to="/blog" className="hover:text-accent transition-colors">Blog</Link>
             <Link to="/contact" className="hover:text-accent transition-colors">Contact</Link>
+            <Link to="/event-registration" className="hover:text-accent transition-colors">Event Registration</Link>
           </div>
 
           {/* Desktop CTAs */}
@@ -116,6 +117,13 @@ export default function Navbar() {
               className="text-gray-750 font-bold px-2 py-1.5 hover:text-accent"
             >
               Contact
+            </Link>
+            <Link 
+              to="/event-registration" 
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-gray-750 font-bold px-2 py-1.5 hover:text-accent"
+            >
+              Event Registration
             </Link>
             <div className="flex flex-col gap-2 pt-2 border-t border-gray-100">
               <a 

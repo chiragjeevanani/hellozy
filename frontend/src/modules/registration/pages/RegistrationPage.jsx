@@ -50,7 +50,11 @@ export default function RegistrationPage() {
   }, [type]);
 
   const handleSelectType = (selectedType) => {
-    setSearchParams({ type: selectedType });
+    if (selectedType === 'event-registration') {
+      navigate('/event-registration');
+    } else {
+      setSearchParams({ type: selectedType });
+    }
   };
 
   // Steps Lists per flow

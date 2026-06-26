@@ -25,7 +25,8 @@ export default function Footer() {
     { label: "Terms & Conditions", to: "/terms" },
     { label: "Privacy Policy", to: "/privacy" },
     { label: "Refund Policy", to: "/refund" },
-    { label: "Cancellation Policy", to: "/cancellation" }
+    { label: "Cancellation Policy", to: "/cancellation" },
+    { label: "Organizer Access", to: "/organizer/login" }
   ];
 
   const services = [

@@ -20,6 +20,13 @@ import AdminLoginPage from './modules/admin/pages/AdminLoginPage';
 import DashboardPage from './modules/admin/pages/DashboardPage';
 import RegistrationsPage from './modules/admin/pages/RegistrationsPage';
 import SettingsPage from './modules/admin/pages/SettingsPage';
+import AdminOrganizersPage from './modules/admin/pages/AdminOrganizersPage';
+import AdminEventTypesPage from './modules/admin/pages/AdminEventTypesPage';
+
+// Organizer and Booking imports
+import EventBookingPage from './modules/landing/pages/EventBookingPage';
+import OrganizerLoginPage from './modules/admin/pages/OrganizerLoginPage';
+import OrganizerDashboard from './modules/admin/pages/OrganizerDashboard';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -66,9 +73,16 @@ function App() {
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<DashboardPage />} />
             <Route path="/admin/registrations" element={<RegistrationsPage />} />
+            <Route path="/admin/organizers" element={<AdminOrganizersPage />} />
+            <Route path="/admin/event-types" element={<AdminEventTypesPage />} />
             <Route path="/admin/settings" element={<SettingsPage />} />
           </Route>
         </Route>
+
+        {/* Organizer Section & Seat Booking */}
+        <Route path="/event-registration" element={<EventBookingPage />} />
+        <Route path="/organizer/login" element={<OrganizerLoginPage />} />
+        <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
 
         <Route path="/about" element={<AboutPage />} />
         <Route path="/faqs" element={<FaqsPage />} />

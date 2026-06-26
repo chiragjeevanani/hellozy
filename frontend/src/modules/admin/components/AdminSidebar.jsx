@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FileText, Settings, LogOut, X } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, LogOut, X, Building2, Tag } from 'lucide-react';
 
 export default function AdminSidebar({ isOpen, toggleSidebar, onLogout }) {
   const location = useLocation();
@@ -9,6 +9,8 @@ export default function AdminSidebar({ isOpen, toggleSidebar, onLogout }) {
   const menuItems = [
     { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
     { label: 'Registrations', path: '/admin/registrations', icon: FileText },
+    { label: 'Event Organizers', path: '/admin/organizers', icon: Building2 },
+    { label: 'Event Types', path: '/admin/event-types', icon: Tag },
     { label: 'Settings', path: '/admin/settings', icon: Settings },
   ];
 

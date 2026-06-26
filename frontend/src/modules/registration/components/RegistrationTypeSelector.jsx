@@ -7,7 +7,8 @@ import {
   Zap, 
   Building2, 
   Users, 
-  ArrowLeft 
+  ArrowLeft,
+  Calendar
 } from 'lucide-react';
 
 const REGISTRATION_OPTIONS = [
@@ -52,6 +53,13 @@ const REGISTRATION_OPTIONS = [
     description: 'Promote green transit & win campaigns.',
     icon: Users,
     color: 'bg-purple-500/10 text-purple-700 hover:bg-purple-500/15',
+  },
+  {
+    id: 'event-registration',
+    title: 'Event Registration',
+    description: 'Book seats as Bride, Groom, Sponsor, Visitor, Participate or Couple.',
+    icon: Calendar,
+    color: 'bg-rose-500/10 text-rose-700 hover:bg-rose-500/15',
   },
 ];
 
