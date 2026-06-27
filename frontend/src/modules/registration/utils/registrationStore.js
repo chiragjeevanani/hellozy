@@ -216,3 +216,85 @@ export const updateEventApplicationStatus = (id, status) => {
   }
 };
 
+// --- DYNAMIC ADVERTISING BANNER CAROUSEL STORE ---
+
+const MOCK_BANNERS = [
+  {
+    id: 'BAN-100001',
+    title: 'Hellozy Registration Campaign 1',
+    imageUrl: '/poster-1.jpeg',
+    linkUrl: '#register',
+    isActive: true,
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'BAN-100002',
+    title: 'Hellozy Registration Campaign 2',
+    imageUrl: '/poster-2.jpeg',
+    linkUrl: '/event-registration',
+    isActive: true,
+    createdAt: new Date().toISOString()
+  }
+];
+
+export const getBanners = () => {
+  try {
+    let list = localStorage.getItem('hellozy_banners');
+    if (list && list.includes('unsplash.com')) {
+      localStorage.removeItem('hellozy_banners');
+      list = null;
+    }
+    if (!list) {
+      localStorage.setItem('hellozy_banners', JSON.stringify(MOCK_BANNERS));
+      return MOCK_BANNERS;
+    }
+    return JSON.parse(list);
+  } catch (e) {
+    return [];
+  }
+};
+
+export const saveBanner = (data) => {
+  try {
+    const list = getBanners();
+    const newBanner = {
+      id: 'BAN-' + Math.floor(100000 + Math.random() * 900000),
+      createdAt: new Date().toISOString(),
+      isActive: true,
+      ...data
+    };
+    list.unshift(newBanner);
+    localStorage.setItem('hellozy_banners', JSON.stringify(list));
+    return newBanner;
+  } catch (e) {
+    console.error("Failed to save banner", e);
+    return null;
+  }
+};
+
+export const deleteBanner = (id) => {
+  try {
+    const list = getBanners();
+    const filtered = list.filter(b => b.id !== id);
+    localStorage.setItem('hellozy_banners', JSON.stringify(filtered));
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+export const toggleBannerActive = (id) => {
+  try {
+    const list = getBanners();
+    const index = list.findIndex(b => b.id === id);
+    if (index !== -1) {
+      list[index].isActive = !list[index].isActive;
+      localStorage.setItem('hellozy_banners', JSON.stringify(list));
+      return true;
+    }
+    return false;
+  } catch (e) {
+    return false;
+  }
+};
+

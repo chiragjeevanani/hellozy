@@ -1,7 +1,9 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
+import AdBannerCarousel from '../components/AdBannerCarousel';
 import Services from '../components/Services';
+import EventHighlight from '../components/EventHighlight';
 import Benefits from '../components/Benefits';
 import RegistrationCTA from '../components/RegistrationCTA';
 import AccountAccess from '../components/AccountAccess';
@@ -15,7 +17,9 @@ export default function LandingPage() {
       <Navbar />
       <main className="flex-grow">
         <Hero />
+        <AdBannerCarousel />
         <Services />
+        <EventHighlight />
         <Benefits />
         <RegistrationCTA />
         <AccountAccess />

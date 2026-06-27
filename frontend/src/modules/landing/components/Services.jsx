@@ -1,5 +1,5 @@
 import React from 'react';
-import { Car, Bike, Package, ArrowRight } from 'lucide-react';
+import { Car, Bike, Package, Ticket, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const servicesList = [
@@ -9,7 +9,8 @@ const servicesList = [
     description: "Comfortable and safe city rides to any destination you want to go with our professional drivers.",
     bg: "bg-primary/5 border-primary/10",
     iconColor: "text-primary",
-    hoverBorder: "rgba(61, 35, 20, 0.3)"
+    hoverBorder: "rgba(61, 35, 20, 0.3)",
+    link: "#register"
   },
   {
     icon: <Bike size={36} />,
@@ -17,7 +18,8 @@ const servicesList = [
     description: "Beat the traffic and reach your destination faster with our quick and affordable bike taxi service.",
     bg: "bg-accent/5 border-accent/10",
     iconColor: "text-accent",
-    hoverBorder: "rgba(232, 93, 4, 0.3)"
+    hoverBorder: "rgba(232, 93, 4, 0.3)",
+    link: "#register"
   },
   {
     icon: <Package size={36} />,
@@ -25,7 +27,17 @@ const servicesList = [
     description: "Fast and reliable parcel delivery services to send packages across the city securely.",
     bg: "bg-primary/5 border-primary/10",
     iconColor: "text-primary",
-    hoverBorder: "rgba(61, 35, 20, 0.3)"
+    hoverBorder: "rgba(61, 35, 20, 0.3)",
+    link: "#register"
+  },
+  {
+    icon: <Ticket size={36} />,
+    title: "EVENT BOOKING",
+    description: "Book tickets, register for exclusive seats, or sponsor the community's premier regional events.",
+    bg: "bg-accent/5 border-accent/10",
+    iconColor: "text-accent",
+    hoverBorder: "rgba(232, 93, 4, 0.3)",
+    link: "/event-registration"
   }
 ];
 
@@ -65,19 +77,19 @@ export default function Services() {
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
           <p className="text-accent font-bold uppercase tracking-wider text-sm mb-3">
-            Our Services
+            Our Offerings
           </p>
           <h2 className="font-display font-black text-3xl md:text-4xl text-primary mb-4">
-            Custom-Built Mobility Solutions
+            Custom-Built Mobility & Event Solutions
           </h2>
           <p className="text-gray-600 text-sm md:text-base">
-            Whether you need a luxury cab, a swift bike ride, or quick package delivery, Hellozy has the perfect solution for your daily transit needs.
+            Whether you need a reliable cab, swift bike transit, prompt parcel logistics, or reservations for local events, Hellozy delivers a premium experience.
           </p>
         </motion.div>
 
         {/* Services Grid */}
         <motion.div 
-          className="grid md:grid-cols-3 gap-8"
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -91,6 +103,9 @@ export default function Services() {
                 y: -8, 
                 boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05)",
                 borderColor: service.hoverBorder
+              }}
+              onClick={() => {
+                window.location.href = service.link;
               }}
               className={`border p-8 rounded-3xl flex flex-col items-start text-left cursor-pointer transition-colors duration-300 ${service.bg}`}
             >
@@ -107,7 +122,7 @@ export default function Services() {
                 {service.description}
               </p>
               <a 
-                href="#book" 
+                href={service.link} 
                 className={`inline-flex items-center gap-2 font-bold transition-colors group ${service.iconColor}`}
               >
                 <span>Book Now</span>

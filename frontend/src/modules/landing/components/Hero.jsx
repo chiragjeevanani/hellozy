@@ -34,6 +34,16 @@ const itemVariants = {
 
 export default function Hero() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -61,28 +71,28 @@ export default function Hero() {
             className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 text-primary-light font-semibold text-sm px-4 py-1.5 rounded-full w-fit mb-6"
           >
             <ShieldCheck size={16} className="text-accent" />
-            <span>Travel securely with us!</span>
+            <span>Secure Mobility & Grand Event Bookings!</span>
           </motion.div>
 
           <motion.h1 
             variants={itemVariants}
             className="font-display font-black text-4xl md:text-5xl lg:text-6xl text-primary leading-tight tracking-tight mb-6"
           >
-            Book your taxi from <span className="text-accent">anywhere</span> today!
+            Your ride & events — <span className="text-accent">all in one place</span> today!
           </motion.h1>
 
           <motion.h3 
             variants={itemVariants}
             className="text-xl md:text-2xl font-bold text-gray-800 mb-3"
           >
-            Everything your taxi business needs is already here!
+            Seamless transportation meets seamless event coordination!
           </motion.h3>
 
           <motion.p 
             variants={itemVariants}
             className="text-gray-600 text-lg leading-relaxed mb-8 max-w-xl"
           >
-            Hellozy is made for modern, secure, and reliable ride services. Experience the premium comfort of professional drivers and well-maintained cabs at your fingertips.
+            Hellozy is designed for modern, secure mobility and premium event coordination. Book top-rated rides instantly or secure your spot, register, and sponsor the region's biggest events.
           </motion.p>
 
           <motion.div 
@@ -94,7 +104,17 @@ export default function Hero() {
                 to="/register" 
                 className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-light text-white font-bold py-4 px-8 rounded-xl shadow-lg shadow-primary/20 transition-colors w-full sm:w-auto"
               >
-                <span>Join Us</span>
+                <span>Find a Ride</span>
+                <ArrowRight size={18} />
+              </Link>
+            </motion.div>
+
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+              <Link 
+                to="/event-registration" 
+                className="inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent-hover text-white font-bold py-4 px-8 rounded-xl shadow-lg shadow-accent/20 transition-colors w-full sm:w-auto"
+              >
+                <span>Book an Event</span>
                 <ArrowRight size={18} />
               </Link>
             </motion.div>
@@ -111,7 +131,7 @@ export default function Hero() {
         </motion.div>
 
         {/* Right column: Auto-playing Carousel with smooth transitions */}
-        <div className="lg:col-span-5 relative flex items-center justify-center z-10 w-full h-[320px] md:h-[450px]">
+        <div className="lg:col-span-5 relative flex items-center justify-center z-10 w-full h-[280px] md:h-[450px]">
           <AnimatePresence mode="popLayout">
             {CAROUSEL_IMAGES.map((imgUrl, idx) => {
               const isActive = idx === activeIndex;
@@ -121,11 +141,11 @@ export default function Hero() {
                   key={imgUrl}
                   src={imgUrl} 
                   alt="Hellozy Vehicle Partner" 
-                  initial={{ opacity: 0, x: 50, scale: 1.15 }}
-                  animate={{ opacity: 1, x: -16, scale: 1.45 }}
-                  exit={{ opacity: 0, x: -50, scale: 1.15 }}
+                  initial={{ opacity: 0, x: isMobile ? 30 : 50, scale: isMobile ? 0.9 : 1.15 }}
+                  animate={{ opacity: 1, x: isMobile ? 0 : 0, scale: isMobile ? 1.0 : 1.45 }}
+                  exit={{ opacity: 0, x: isMobile ? -30 : -50, scale: isMobile ? 0.9 : 1.15 }}
                   transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute w-full h-auto object-contain max-h-[500px] drop-shadow-2xl -translate-x-4 lg:-translate-x-16"
+                  className="absolute w-full h-auto object-contain max-h-[450px] drop-shadow-2xl translate-x-0 lg:translate-x-4"
                 />
               );
             })}

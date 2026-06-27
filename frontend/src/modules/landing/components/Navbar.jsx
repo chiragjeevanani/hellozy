@@ -45,7 +45,10 @@ export default function Navbar() {
             <Link to="/faqs" className="hover:text-accent transition-colors">FAQs</Link>
             <Link to="/blog" className="hover:text-accent transition-colors">Blog</Link>
             <Link to="/contact" className="hover:text-accent transition-colors">Contact</Link>
-            <Link to="/event-registration" className="hover:text-accent transition-colors">Event Registration</Link>
+            <Link to="/event-registration" className="relative group overflow-hidden bg-accent/10 border border-accent/25 text-accent px-3 py-1 rounded-full text-xs font-bold tracking-wide transition-all hover:bg-accent hover:text-white inline-flex items-center gap-1">
+              Book Events
+              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping absolute -top-0.5 -right-0.5"></span>
+            </Link>
           </div>
 
           {/* Desktop CTAs */}
@@ -121,9 +124,10 @@ export default function Navbar() {
             <Link 
               to="/event-registration" 
               onClick={() => setMobileMenuOpen(false)}
-              className="text-gray-750 font-bold px-2 py-1.5 hover:text-accent"
+              className="mx-2 my-1 text-center bg-accent/10 border border-accent/20 text-accent font-bold py-2 rounded-xl flex justify-center items-center gap-1.5"
             >
-              Event Registration
+              Book Events
+              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping"></span>
             </Link>
             <div className="flex flex-col gap-2 pt-2 border-t border-gray-100">
               <a 

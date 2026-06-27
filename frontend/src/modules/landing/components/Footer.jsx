@@ -33,9 +33,8 @@ export default function Footer() {
     { label: "TAXI SERVICE", href: "/#services" },
     { label: "BIKE RIDE", href: "/#services" },
     { label: "PARCEL DELIVERY", href: "/#services" },
-    { label: "PICKUP LOGISTICS", href: "/#services" },
-    { label: "BUS TRANSIT", href: "/#services" },
-    { label: "E-RICKSHAW RIDES", href: "/#services" }
+    { label: "EVENT REGISTRATION", href: "/event-registration" },
+    { label: "SPONSORSHIP SLOTS", href: "/event-registration" }
   ];
 
   const socials = [
@@ -62,7 +61,7 @@ export default function Footer() {
             </span>
           </div>
           <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-sm">
-            We provide the best taxi and ride services in the region. Reliable, fast, and secure rides at your fingertips. Our fleet consists of well-maintained vehicles driven by professional drivers to ensure a comfortable journey.
+            We provide the best mobility, delivery, and event coordination services in the region. Reliable, fast, and secure rides alongside seamless seat registrations and sponsorships at your fingertips.
           </p>
           <div className="flex gap-3">
             {socials.map((social, index) => (
