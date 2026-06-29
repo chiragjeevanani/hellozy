@@ -1,18 +1,17 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FileText, Settings, LogOut, X, Building2, Tag, IndianRupee } from 'lucide-react';
+import { LayoutDashboard, Calendar, Users, TrendingUp, Settings, LogOut, X, Building2 } from 'lucide-react';
 
-export default function AdminSidebar({ isOpen, toggleSidebar, onLogout }) {
+export default function OrganizerSidebar({ isOpen, toggleSidebar, onLogout, organizer }) {
   const location = useLocation();
   const currentPath = location.pathname;
 
   const menuItems = [
-    { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
-    { label: 'Registrations', path: '/admin/registrations', icon: FileText },
-    { label: 'Event Organizers', path: '/admin/organizers', icon: Building2 },
-    { label: 'Event Types', path: '/admin/event-types', icon: Tag },
-    { label: 'Bookings & Commission', path: '/admin/bookings', icon: IndianRupee },
-    { label: 'Settings', path: '/admin/settings', icon: Settings },
+    { label: 'Overview', path: '/organizer', icon: LayoutDashboard },
+    { label: 'Host & My Events', path: '/organizer/events', icon: Calendar },
+    { label: 'Applicants', path: '/organizer/applicants', icon: Users },
+    { label: 'My Earnings', path: '/organizer/earnings', icon: TrendingUp },
+    { label: 'Settings', path: '/organizer/settings', icon: Settings },
   ];
 
   return (
@@ -34,9 +33,9 @@ export default function AdminSidebar({ isOpen, toggleSidebar, onLogout }) {
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
           <Link to="/" className="flex items-center gap-2">
-            <img src="/logo.png" alt="Hellozy" className="h-8 w-auto brightness-0 invert" />
-            <span className="font-display font-extrabold text-xl tracking-tight">
-              hellozy admin
+            <Building2 className="w-6 h-6 text-accent shrink-0" />
+            <span className="font-display font-extrabold text-xl tracking-tight leading-none pt-0.5">
+              hellozy host
             </span>
           </Link>
           <button 
@@ -46,6 +45,14 @@ export default function AdminSidebar({ isOpen, toggleSidebar, onLogout }) {
             <X size={20} />
           </button>
         </div>
+
+        {/* Organizer info block */}
+        {organizer && (
+          <div className="px-6 py-4 border-b border-white/5 bg-white/3 flex flex-col gap-0.5 text-left">
+            <p className="text-xs font-bold text-white truncate">{organizer.firmName || 'Sub-Admin'}</p>
+            <p className="text-[10px] text-stone-400 font-semibold truncate">Host: {organizer.ownerName}</p>
+          </div>
+        )}
 
         {/* Navigation links */}
         <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">

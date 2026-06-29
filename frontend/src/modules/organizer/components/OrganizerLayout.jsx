@@ -1,33 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import AdminSidebar from './AdminSidebar';
-import AdminTopbar from './AdminTopbar';
-import { logout } from '../utils/adminAuth';
+import OrganizerSidebar from './OrganizerSidebar';
+import OrganizerTopbar from './OrganizerTopbar';
 
-export default function AdminLayout() {
+export default function OrganizerLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [organizer, setOrganizer] = useState(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const session = localStorage.getItem('hellozy_active_organizer');
+    if (session) {
+      setOrganizer(JSON.parse(session));
+    }
+  }, []);
+
   const handleLogout = () => {
-    logout();
-    navigate('/admin/login', { replace: true });
+    localStorage.removeItem('hellozy_active_organizer');
+    navigate('/organizer/login', { replace: true });
   };
 
   return (
     <div className="flex h-screen overflow-hidden bg-stone-50">
       {/* Sidebar Navigation */}
-      <AdminSidebar 
+      <OrganizerSidebar 
         isOpen={sidebarOpen} 
         toggleSidebar={() => setSidebarOpen(!sidebarOpen)} 
         onLogout={handleLogout} 
+        organizer={organizer}
       />
 
       {/* Main Container */}
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Top Header Bar */}
-        <AdminTopbar 
+        <OrganizerTopbar 
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} 
           onLogout={handleLogout} 
+          organizer={organizer}
         />
 
         {/* Scrollable Content Pane */}

@@ -22,11 +22,18 @@ import RegistrationsPage from './modules/admin/pages/RegistrationsPage';
 import SettingsPage from './modules/admin/pages/SettingsPage';
 import AdminOrganizersPage from './modules/admin/pages/AdminOrganizersPage';
 import AdminEventTypesPage from './modules/admin/pages/AdminEventTypesPage';
+import AdminBookingsPage from './modules/admin/pages/AdminBookingsPage';
 
 // Organizer and Booking imports
 import EventBookingPage from './modules/landing/pages/EventBookingPage';
-import OrganizerLoginPage from './modules/admin/pages/OrganizerLoginPage';
-import OrganizerDashboard from './modules/admin/pages/OrganizerDashboard';
+import OrganizerRoutes from './modules/organizer/routes/OrganizerRoutes';
+import OrganizerLayout from './modules/organizer/components/OrganizerLayout';
+import OrganizerLoginPage from './modules/organizer/pages/OrganizerLoginPage';
+import OrganizerDashboardPage from './modules/organizer/pages/DashboardPage';
+import OrganizerEventsPage from './modules/organizer/pages/EventsPage';
+import OrganizerApplicantsPage from './modules/organizer/pages/ApplicantsPage';
+import OrganizerEarningsPage from './modules/organizer/pages/EarningsPage';
+import OrganizerSettingsPage from './modules/organizer/pages/SettingsPage';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -75,6 +82,7 @@ function App() {
             <Route path="/admin/registrations" element={<RegistrationsPage />} />
             <Route path="/admin/organizers" element={<AdminOrganizersPage />} />
             <Route path="/admin/event-types" element={<AdminEventTypesPage />} />
+            <Route path="/admin/bookings" element={<AdminBookingsPage />} />
             <Route path="/admin/settings" element={<SettingsPage />} />
           </Route>
         </Route>
@@ -82,7 +90,15 @@ function App() {
         {/* Organizer Section & Seat Booking */}
         <Route path="/event-registration" element={<EventBookingPage />} />
         <Route path="/organizer/login" element={<OrganizerLoginPage />} />
-        <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
+        <Route element={<OrganizerRoutes />}>
+          <Route element={<OrganizerLayout />}>
+            <Route path="/organizer" element={<OrganizerDashboardPage />} />
+            <Route path="/organizer/events" element={<OrganizerEventsPage />} />
+            <Route path="/organizer/applicants" element={<OrganizerApplicantsPage />} />
+            <Route path="/organizer/earnings" element={<OrganizerEarningsPage />} />
+            <Route path="/organizer/settings" element={<OrganizerSettingsPage />} />
+          </Route>
+        </Route>
 
         <Route path="/about" element={<AboutPage />} />
         <Route path="/faqs" element={<FaqsPage />} />

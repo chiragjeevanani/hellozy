@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getRegistrations } from '../../registration/utils/registrationStore';
+import { getRegistrations, getEventApplications } from '../../registration/utils/registrationStore';
 import StatsCard from '../components/StatsCard';
 import StatusBadge from '../components/StatusBadge';
 import { 
@@ -9,7 +9,8 @@ import {
   CheckCircle, 
   XCircle, 
   ArrowRight,
-  TrendingUp
+  TrendingUp,
+  IndianRupee
 } from 'lucide-react';
 import { 
   ResponsiveContainer, 
@@ -44,6 +45,7 @@ export default function DashboardPage() {
   });
   
   const [typeCounts, setTypeCounts] = useState({});
+  const [commissionSummary, setCommissionSummary] = useState({ totalCommission: 0, totalBookingRevenue: 0, totalBookings: 0 });
 
   useEffect(() => {
     const list = getRegistrations();
@@ -68,6 +70,12 @@ export default function DashboardPage() {
     });
     
     setTypeCounts(counts);
+
+    // Commission summary
+    const apps = getEventApplications();
+    const totalCommission = apps.reduce((s, a) => s + (Number(a.commissionAmount) || 0), 0);
+    const totalBookingRevenue = apps.reduce((s, a) => s + (Number(a.bookingAmount) || 0), 0);
+    setCommissionSummary({ totalCommission, totalBookingRevenue, totalBookings: apps.length });
   }, []);
 
   // Format data for Recharts
@@ -210,6 +218,33 @@ export default function DashboardPage() {
           </Link>
         </div>
 
+      </div>
+
+      {/* Commission Summary Widget */}
+      <div className="bg-gradient-to-r from-primary to-primary-light rounded-3xl p-6 shadow-xs text-white">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="p-3 bg-white/10 rounded-2xl">
+              <IndianRupee className="w-6 h-6 text-accent" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold font-display">Platform Commission Earned</h3>
+              <p className="text-xs text-white/70 font-semibold mt-0.5">Across {commissionSummary.totalBookings} event booking{commissionSummary.totalBookings !== 1 ? 's' : ''} • Gross Revenue: ₹{commissionSummary.totalBookingRevenue.toLocaleString()}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-6">
+            <div className="text-right">
+              <p className="text-3xl font-extrabold font-display text-accent">₹{commissionSummary.totalCommission.toLocaleString()}</p>
+              <p className="text-[10px] text-white/60 font-bold uppercase tracking-wider">Total Commission</p>
+            </div>
+            <Link
+              to="/admin/bookings"
+              className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold rounded-xl transition-all inline-flex items-center gap-1.5 shrink-0"
+            >
+              Full Report <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

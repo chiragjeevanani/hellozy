@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { getEvents, saveEventApplication } from '../../registration/utils/registrationStore';
-import { ArrowLeft, ArrowRight, ShieldCheck, Upload, CheckCircle2, Ticket, Calendar, DollarSign, Users, Plane, Train } from 'lucide-react';
+import { getEvents, saveEventApplication, getCommissionConfig, calculateCommission } from '../../registration/utils/registrationStore';
+import { ArrowLeft, ArrowRight, ShieldCheck, Upload, CheckCircle2, Ticket, Calendar, DollarSign, Users, Plane, Train, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function EventBookingPage() {
@@ -40,6 +40,17 @@ export default function EventBookingPage() {
     setEvents(getEvents());
   }, []);
 
+  // Derive booking amount from event's rolePricing for selected role
+  const bookingAmount = React.useMemo(() => {
+    if (!selectedEvent) return 0;
+    if (role === 'Sponsor') return Number(sponsorAmount) || 0;
+    const pricing = selectedEvent.rolePricing || {};
+    return Number(pricing[role]) || 0;
+  }, [selectedEvent, role, sponsorAmount]);
+
+  const commissionAmt = React.useMemo(() => calculateCommission(bookingAmount), [bookingAmount]);
+  const totalPayable = bookingAmount + commissionAmt;
+
   const handleFileChange = (e, setFileState) => {
     const file = e.target.files[0];
     if (file) {
@@ -69,7 +80,7 @@ export default function EventBookingPage() {
         setErrorMsg('Please upload your photo and Aadhar card.');
         return;
       }
-      if (hasPassport === 'yes' && (!passportNo || !passportIssueDate || !passportFile)) {
+      if (selectedEvent.requirePassport && hasPassport === 'yes' && (!passportNo || !passportIssueDate || !passportFile)) {
         setErrorMsg('Please complete all passport verification details.');
         return;
       }
@@ -94,7 +105,6 @@ export default function EventBookingPage() {
   };
 
   const handlePaymentCheckout = (status) => {
-    // Save seat booking registration
     const appData = {
       eventId: selectedEvent.id,
       eventTitle: selectedEvent.title,
@@ -107,17 +117,19 @@ export default function EventBookingPage() {
       whatsapp,
       email,
       address,
-      travelMode,
+      travelMode: selectedEvent.requireTravel ? travelMode : 'None',
       personsCount,
       sponsorAmount: role === 'Sponsor' ? Number(sponsorAmount) : 0,
       photo: picFile,
       aadharNo,
       aadharDoc: aadharFile,
-      hasPassport,
-      passportNo: hasPassport === 'yes' ? passportNo : '',
-      passportIssueDate: hasPassport === 'yes' ? passportIssueDate : '',
-      passportDoc: hasPassport === 'yes' ? passportFile : null,
-      paymentStatus: status // Successful / Unsuccessful
+      hasPassport: selectedEvent.requirePassport ? hasPassport : 'no',
+      passportNo: (selectedEvent.requirePassport && hasPassport === 'yes') ? passportNo : '',
+      passportIssueDate: (selectedEvent.requirePassport && hasPassport === 'yes') ? passportIssueDate : '',
+      passportDoc: (selectedEvent.requirePassport && hasPassport === 'yes') ? passportFile : null,
+      paymentStatus: status,
+      bookingAmount,
+      commissionAmount: commissionAmt
     };
 
     const saved = saveEventApplication(appData);
@@ -150,11 +162,24 @@ export default function EventBookingPage() {
                         selectedEvent?.id === evt.id ? 'border-accent bg-accent/5' : 'border-stone-200 bg-white hover:border-stone-300'
                       }`}
                     >
-                      <span className="inline-block px-2.5 py-0.5 bg-stone-100 border text-stone-600 rounded-lg text-[9px] font-extrabold uppercase mb-2">
-                        {evt.eventType}
-                      </span>
+                      <div className="flex justify-between items-start">
+                        <span className="inline-block px-2.5 py-0.5 bg-stone-100 border text-stone-600 rounded-lg text-[9px] font-extrabold uppercase mb-2">
+                          {evt.eventType}
+                        </span>
+                        <div className="flex gap-1">
+                          {evt.requireTravel && <span className="p-1 rounded bg-stone-200/50 text-stone-650" title="Travel details required"><Plane size={9} /></span>}
+                          {evt.requirePassport && <span className="p-1 rounded bg-accent/10 text-accent" title="Passport required"><ShieldCheck size={9} /></span>}
+                        </div>
+                      </div>
                       <h4 className="text-sm font-bold text-stone-900 leading-tight">{evt.title}</h4>
                       <p className="text-[11px] text-stone-500 line-clamp-2 mt-1">{evt.description}</p>
+                      
+                      {/* Date & Location preview */}
+                      <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[9px] text-stone-400 font-bold mt-2">
+                        {evt.eventDate && <span className="flex items-center gap-0.5"><Calendar size={10} /> {new Date(evt.eventDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</span>}
+                        {evt.eventLocation && <span className="flex items-center gap-0.5"><MapPin size={10} /> {evt.eventLocation}</span>}
+                      </div>
+
                       <div className="mt-3 pt-3 border-t border-stone-100 flex justify-between items-center text-[10px] text-stone-500 font-bold">
                         <span>Min Sponsor: ₹{evt.minSponsorAmount}</span>
                         <span>Organized by: {evt.organizerName}</span>
@@ -174,19 +199,43 @@ export default function EventBookingPage() {
               <div className="space-y-3 pt-4 border-t">
                 <label className="text-[10px] font-bold text-stone-500 uppercase tracking-wider block">Register As</label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {['Participate', 'Visitor', 'Sponsor', 'Couple'].map(cat => (
-                    <button
-                      key={cat}
-                      type="button"
-                      onClick={() => setRole(cat)}
-                      className={`py-3 rounded-xl font-bold text-xs border-2 transition-all ${
-                        role === cat ? 'bg-primary border-primary text-white' : 'bg-white border-stone-200 text-stone-600 hover:border-stone-300'
-                      }`}
-                    >
-                      {cat}
-                    </button>
-                  ))}
+                  {(selectedEvent.bookingRoles || ['Participate', 'Visitor', 'Sponsor', 'Couple']).map(cat => {
+                    const price = selectedEvent.rolePricing?.[cat];
+                    return (
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => setRole(cat)}
+                        className={`py-3 px-2 rounded-xl font-bold text-xs border-2 transition-all flex flex-col items-center gap-0.5 ${
+                          role === cat ? 'bg-primary border-primary text-white' : 'bg-white border-stone-200 text-stone-600 hover:border-stone-300'
+                        }`}
+                      >
+                        <span>{cat}</span>
+                        {price !== undefined && price > 0 && (
+                          <span className={`text-[9px] font-bold ${role === cat ? 'text-white/70' : 'text-accent'}`}>₹{price}</span>
+                        )}
+                        {price === 0 && cat !== 'Sponsor' && (
+                          <span className={`text-[9px] font-bold ${role === cat ? 'text-white/70' : 'text-emerald-600'}`}>Free</span>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
+                {/* Price preview */}
+                {bookingAmount > 0 && (
+                  <div className="flex items-center gap-3 p-3 bg-accent/5 border border-accent/20 rounded-xl text-xs">
+                    <span className="text-stone-600 font-semibold">Booking Fee: <strong className="text-stone-900">₹{bookingAmount}</strong></span>
+                    <span className="text-stone-400">+</span>
+                    <span className="text-stone-600 font-semibold">Service Charge: <strong className="text-accent">₹{commissionAmt}</strong></span>
+                    <span className="text-stone-400">=</span>
+                    <span className="font-bold text-stone-900">Total: ₹{totalPayable}</span>
+                  </div>
+                )}
+                {bookingAmount === 0 && role !== 'Sponsor' && (
+                  <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-700 font-semibold">
+                    This role is free to register.
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -277,35 +326,37 @@ export default function EventBookingPage() {
               </div>
 
               {/* Passport */}
-              <div className="p-4 border border-stone-200 rounded-2xl bg-stone-50 space-y-3 sm:col-span-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-stone-850">Do you possess a valid Passport?</span>
-                  <div className="flex gap-2">
-                    <button type="button" onClick={() => setHasPassport('yes')} className={`px-4 py-1.5 rounded-lg text-xs font-bold ${hasPassport === 'yes' ? 'bg-accent text-white' : 'bg-white border text-stone-600'}`}>Yes</button>
-                    <button type="button" onClick={() => { setHasPassport('no'); setPassportNo(''); setPassportFile(null); }} className={`px-4 py-1.5 rounded-lg text-xs font-bold ${hasPassport === 'no' ? 'bg-primary text-white' : 'bg-white border text-stone-600'}`}>No</button>
+              {selectedEvent.requirePassport && (
+                <div className="p-4 border border-stone-200 rounded-2xl bg-stone-50 space-y-3 sm:col-span-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-bold text-stone-850">Do you possess a valid Passport?</span>
+                    <div className="flex gap-2">
+                      <button type="button" onClick={() => setHasPassport('yes')} className={`px-4 py-1.5 rounded-lg text-xs font-bold ${hasPassport === 'yes' ? 'bg-accent text-white' : 'bg-white border text-stone-600'}`}>Yes</button>
+                      <button type="button" onClick={() => { setHasPassport('no'); setPassportNo(''); setPassportFile(null); }} className={`px-4 py-1.5 rounded-lg text-xs font-bold ${hasPassport === 'no' ? 'bg-primary text-white' : 'bg-white border text-stone-600'}`}>No</button>
+                    </div>
                   </div>
+                  
+                  {hasPassport === 'yes' && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t">
+                      <div className="space-y-1">
+                        <label className="text-[9px] font-bold text-stone-500 uppercase tracking-wider">Passport Number</label>
+                        <input type="text" value={passportNo} onChange={(e) => setPassportNo(e.target.value)} className="w-full px-4 py-2 border border-stone-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-accent bg-white" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[9px] font-bold text-stone-500 uppercase tracking-wider">Issue Date</label>
+                        <input type="date" value={passportIssueDate} onChange={(e) => setPassportIssueDate(e.target.value)} className="w-full px-4 py-2 border border-stone-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-accent bg-white" />
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label className="border border-dashed border-stone-300 rounded-lg p-3.5 flex flex-col items-center justify-center bg-white cursor-pointer hover:bg-stone-50">
+                          <Upload className="w-4 h-4 text-stone-400 mb-1" />
+                          <span className="text-[10px] text-stone-500 font-semibold">{passportFile ? passportFile.name : 'Upload Passport PDF'}</span>
+                          <input type="file" accept="application/pdf" className="hidden" onChange={(e) => handleFileChange(e, setPassportFile)} />
+                        </label>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                
-                {hasPassport === 'yes' && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t">
-                    <div className="space-y-1">
-                      <label className="text-[9px] font-bold text-stone-500 uppercase tracking-wider">Passport Number</label>
-                      <input type="text" value={passportNo} onChange={(e) => setPassportNo(e.target.value)} className="w-full px-4 py-2 border border-stone-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-accent bg-white" />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-[9px] font-bold text-stone-500 uppercase tracking-wider">Issue Date</label>
-                      <input type="date" value={passportIssueDate} onChange={(e) => setPassportIssueDate(e.target.value)} className="w-full px-4 py-2 border border-stone-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-accent bg-white" />
-                    </div>
-                    <div className="sm:col-span-2">
-                      <label className="border border-dashed border-stone-300 rounded-lg p-3.5 flex flex-col items-center justify-center bg-white cursor-pointer hover:bg-stone-50">
-                        <Upload className="w-4 h-4 text-stone-400 mb-1" />
-                        <span className="text-[10px] text-stone-500 font-semibold">{passportFile ? passportFile.name : 'Upload Passport PDF'}</span>
-                        <input type="file" accept="application/pdf" className="hidden" onChange={(e) => handleFileChange(e, setPassportFile)} />
-                      </label>
-                    </div>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
           </div>
         );
@@ -316,22 +367,22 @@ export default function EventBookingPage() {
             <div>
               <h3 className="text-sm font-bold text-stone-400 uppercase tracking-wider mb-2">Step 4: Attendance & Sponsorship</h3>
               <p className="text-stone-500 text-xs">Fill out event travel arrangements and sponsorship terms.</p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5 p-4 border border-stone-200 rounded-2xl bg-stone-50/50">
-                <label className="text-[10px] font-bold text-stone-500 uppercase tracking-wider block mb-1">Going Through (Travel Mode)</label>
-                <div className="flex gap-4">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" checked={travelMode === 'Train'} onChange={() => setTravelMode('Train')} className="accent-accent" />
-                    <Train size={16} className="text-stone-500" /> <span className="text-xs font-semibold">Train</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" checked={travelMode === 'Flight'} onChange={() => setTravelMode('Flight')} className="accent-accent" />
-                    <Plane size={16} className="text-stone-500" /> <span className="text-xs font-semibold">Flight</span>
-                  </label>
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {selectedEvent.requireTravel && (
+                <div className="space-y-1.5 p-4 border border-stone-200 rounded-2xl bg-stone-50/50">
+                  <label className="text-[10px] font-bold text-stone-500 uppercase tracking-wider block mb-1">Going Through (Travel Mode)</label>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" checked={travelMode === 'Train'} onChange={() => setTravelMode('Train')} className="accent-accent" />
+                      <Train size={16} className="text-stone-500" /> <span className="text-xs font-semibold">Train</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" checked={travelMode === 'Flight'} onChange={() => setTravelMode('Flight')} className="accent-accent" />
+                      <Plane size={16} className="text-stone-500" /> <span className="text-xs font-semibold">Flight</span>
+                    </label>
+                  </div>
                 </div>
-              </div>
+              )}      </div>
 
               {(role === 'Visitor' || role === 'Couple' || role === 'Sponsor') && (
                 <div className="space-y-1 p-4 border border-stone-200 rounded-2xl bg-stone-50/50">
@@ -393,16 +444,35 @@ export default function EventBookingPage() {
                 <span className="text-stone-500 font-semibold">Email & Phone</span>
                 <span className="text-stone-900 font-bold">{email} • {mobile}</span>
               </div>
-              <div className="flex justify-between border-b pb-2 text-xs sm:text-sm">
-                <span className="text-stone-500 font-semibold">Travel Mode</span>
-                <span className="text-stone-900 font-bold">{travelMode}</span>
-              </div>
+              {selectedEvent.requireTravel && (
+                <div className="flex justify-between border-b pb-2 text-xs sm:text-sm">
+                  <span className="text-stone-500 font-semibold">Travel Mode</span>
+                  <span className="text-stone-900 font-bold">{travelMode}</span>
+                </div>
+              )}
               {role === 'Sponsor' && (
                 <div className="flex justify-between border-b pb-2 text-xs sm:text-sm bg-accent/5 p-2 rounded-lg">
                   <span className="text-accent font-bold">Sponsor Amount</span>
                   <span className="text-accent font-bold text-base">₹{sponsorAmount}</span>
                 </div>
               )}
+
+              {/* Price Breakdown */}
+              <div className="pt-3 border-t space-y-2">
+                <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Payment Breakdown</p>
+                <div className="flex justify-between text-xs">
+                  <span className="text-stone-500 font-semibold">Booking Fee ({role})</span>
+                  <span className="font-bold text-stone-800">₹{bookingAmount.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-stone-500 font-semibold">Platform Service Charge</span>
+                  <span className="font-bold text-accent">₹{commissionAmt.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm border-t pt-2">
+                  <span className="font-bold text-stone-900">Total Payable</span>
+                  <span className="font-extrabold text-stone-900">₹{totalPayable.toLocaleString()}</span>
+                </div>
+              </div>
             </div>
 
             <div className="pt-4 space-y-3">

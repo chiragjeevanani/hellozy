@@ -5,10 +5,12 @@ import {
   getBanners, 
   saveBanner, 
   deleteBanner, 
-  toggleBannerActive 
+  toggleBannerActive,
+  getCommissionConfig,
+  setCommissionConfig
 } from '../../registration/utils/registrationStore';
 import { changeAdminCredentials } from '../utils/adminAuth';
-import { CreditCard, KeyRound, CheckCircle2, AlertCircle, Image, Plus, Trash2, Globe } from 'lucide-react';
+import { CreditCard, KeyRound, CheckCircle2, AlertCircle, Image, Plus, Trash2, Globe, Percent, IndianRupee } from 'lucide-react';
 
 export default function SettingsPage() {
   const [paymentConfig, setPaymentConfig] = useState(false);
@@ -19,6 +21,11 @@ export default function SettingsPage() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [pwdStatus, setPwdStatus] = useState({ type: '', message: '' });
+
+  // Commission state
+  const [commissionType, setCommissionType] = useState('percentage');
+  const [commissionValue, setCommissionValue] = useState('10');
+  const [commissionStatus, setCommissionStatus] = useState({ type: '', message: '' });
 
   // Banner State
   const [banners, setBanners] = useState([]);
@@ -33,6 +40,9 @@ export default function SettingsPage() {
     if (storedEmail) {
       setAdminEmail(storedEmail);
     }
+    const cfg = getCommissionConfig();
+    setCommissionType(cfg.type);
+    setCommissionValue(String(cfg.value));
     loadBanners();
   }, []);
 
@@ -45,6 +55,28 @@ export default function SettingsPage() {
     setPaymentConfig(newVal);
     setPaymentEnabled(newVal);
   };
+
+  const handleSaveCommission = (e) => {
+    e.preventDefault();
+    const val = Number(commissionValue);
+    if (isNaN(val) || val < 0) {
+      setCommissionStatus({ type: 'error', message: 'Please enter a valid commission value.' });
+      return;
+    }
+    if (commissionType === 'percentage' && val > 100) {
+      setCommissionStatus({ type: 'error', message: 'Percentage cannot exceed 100%.' });
+      return;
+    }
+    setCommissionConfig(commissionType, val);
+    setCommissionStatus({ type: 'success', message: 'Commission rate saved successfully!' });
+    setTimeout(() => setCommissionStatus({ type: '', message: '' }), 3000);
+  };
+
+  // Live commission preview (on ₹1000 example)
+  const previewAmount = 1000;
+  const previewCommission = commissionType === 'percentage'
+    ? Math.round((previewAmount * Number(commissionValue || 0)) / 100)
+    : Number(commissionValue || 0);
 
   const handleCredentialsChange = (e) => {
     e.preventDefault();
@@ -103,7 +135,87 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-3xl space-y-8 text-left">
-      {/* Onboarding Configuration Card */}
+
+      {/* Commission Configuration Card */}
+      <div className="bg-white border border-stone-200 rounded-3xl p-6 shadow-xs">
+        <h3 className="text-base font-bold text-stone-900 font-display mb-2">
+          Commission Configuration
+        </h3>
+        <p className="text-xs text-stone-500 font-semibold mb-6">
+          Set the platform commission deducted from each event booking made by users.
+        </p>
+
+        <form onSubmit={handleSaveCommission} className="space-y-5">
+          {/* Type Toggle */}
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => setCommissionType('percentage')}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border transition-all ${
+                commissionType === 'percentage'
+                  ? 'bg-accent text-white border-accent shadow-sm'
+                  : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
+              }`}
+            >
+              <Percent size={14} /> Percentage (%)
+            </button>
+            <button
+              type="button"
+              onClick={() => setCommissionType('flat')}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border transition-all ${
+                commissionType === 'flat'
+                  ? 'bg-accent text-white border-accent shadow-sm'
+                  : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
+              }`}
+            >
+              <IndianRupee size={14} /> Flat Amount (₹)
+            </button>
+          </div>
+
+          {/* Value Input */}
+          <div className="flex items-end gap-4">
+            <div className="flex-1 space-y-1.5">
+              <label className="text-[10px] font-bold text-stone-500 uppercase tracking-wider">
+                {commissionType === 'percentage' ? 'Commission Percentage (%)' : 'Flat Commission Amount (₹)'}
+              </label>
+              <input
+                type="number"
+                min="0"
+                max={commissionType === 'percentage' ? 100 : undefined}
+                step="0.5"
+                value={commissionValue}
+                onChange={(e) => setCommissionValue(e.target.value)}
+                className="w-full px-4 py-2.5 border border-stone-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent"
+                placeholder={commissionType === 'percentage' ? 'e.g. 10' : 'e.g. 50'}
+                required
+              />
+            </div>
+            {/* Live Preview */}
+            <div className="px-4 py-2.5 bg-accent/8 border border-accent/20 rounded-xl text-xs shrink-0">
+              <p className="text-[10px] text-stone-500 font-bold uppercase tracking-wider mb-0.5">Preview on ₹1,000 booking</p>
+              <p className="font-extrabold text-accent">Commission = ₹{previewCommission}</p>
+            </div>
+          </div>
+
+          {commissionStatus.message && (
+            <div className={`p-3 rounded-xl text-xs font-semibold flex items-center gap-2 ${
+              commissionStatus.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-250' : 'bg-red-50 text-red-700 border border-red-250'
+            }`}>
+              {commissionStatus.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+              <span>{commissionStatus.message}</span>
+            </div>
+          )}
+
+          <div className="pt-2 border-t border-stone-100 flex justify-end">
+            <button
+              type="submit"
+              className="px-6 py-2.5 bg-accent hover:bg-accent-hover text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-sm cursor-pointer inline-flex items-center gap-1.5"
+            >
+              <IndianRupee className="w-3.5 h-3.5" /> Save Commission Rate
+            </button>
+          </div>
+        </form>
+      </div>
       <div className="bg-white border border-stone-200 rounded-3xl p-6 shadow-xs">
         <h3 className="text-base font-bold text-stone-900 font-display mb-2">
           Onboarding Configurations

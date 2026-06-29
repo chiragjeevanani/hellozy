@@ -16,7 +16,7 @@ export default function OrganizerLoginPage() {
     const organizer = authenticateOrganizer(email, password);
     if (organizer) {
       localStorage.setItem('hellozy_active_organizer', JSON.stringify(organizer));
-      navigate('/organizer/dashboard', { replace: true });
+      navigate('/organizer', { replace: true });
     } else {
       setError(true);
       setShake(true);

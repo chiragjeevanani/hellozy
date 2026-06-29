@@ -55,13 +55,65 @@ export const setPaymentEnabled = (enabled) => {
   } catch (e) {}
 };
 
+// --- COMMISSION CONFIG STORE ---
+
+export const getCommissionConfig = () => {
+  try {
+    const raw = localStorage.getItem('hellozy_commission_config');
+    return raw ? JSON.parse(raw) : { type: 'percentage', value: 10 };
+  } catch (e) {
+    return { type: 'percentage', value: 10 };
+  }
+};
+
+export const setCommissionConfig = (type, value) => {
+  try {
+    localStorage.setItem('hellozy_commission_config', JSON.stringify({ type, value }));
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+// Helper: calculate commission amount given a booking amount
+export const calculateCommission = (bookingAmount) => {
+  const config = getCommissionConfig();
+  if (config.type === 'percentage') {
+    return Math.round((bookingAmount * config.value) / 100);
+  }
+  return Number(config.value) || 0;
+};
+
 // --- EVENT MANAGEMENT MOCK DB STORE ---
+
+const MOCK_ORGANIZERS = [
+  {
+    id: 'ORG-888888',
+    createdAt: new Date().toISOString(),
+    ownerName: 'Rahul Sharma',
+    firmName: 'Vibrant Events Pvt Ltd',
+    address: '102, Connaught Place, New Delhi',
+    mobile: '9876543210',
+    email: 'organizer@hellozy.com',
+    password: 'organizer@2026',
+    bankDetails: {
+      bankName: 'State Bank of India',
+      accountNo: '333444555666',
+      accountType: 'Saving',
+      ifscCode: 'SBIN0001234'
+    }
+  }
+];
 
 // 1. EVENT ORGANIZERS (Registered by Admin)
 export const getOrganizers = () => {
   try {
     const list = localStorage.getItem('hellozy_organizers');
-    return list ? JSON.parse(list) : [];
+    if (!list) {
+      localStorage.setItem('hellozy_organizers', JSON.stringify(MOCK_ORGANIZERS));
+      return MOCK_ORGANIZERS;
+    }
+    return JSON.parse(list);
   } catch (e) {
     return [];
   }
@@ -89,6 +141,22 @@ export const authenticateOrganizer = (email, password) => {
   return list.find(org => org.email === email && org.password === password) || null;
 };
 
+// Update organizer credentials and/or profile fields
+export const updateOrganizerCredentials = (orgId, updates) => {
+  try {
+    const list = getOrganizers();
+    const index = list.findIndex(o => o.id === orgId);
+    if (index !== -1) {
+      list[index] = { ...list[index], ...updates };
+      localStorage.setItem('hellozy_organizers', JSON.stringify(list));
+      return list[index];
+    }
+    return null;
+  } catch (e) {
+    return null;
+  }
+};
+
 // 2. EVENT TYPES (Custom categories added by Admin/Sub-admin)
 export const getEventTypes = () => {
   try {
@@ -113,6 +181,7 @@ export const saveEventType = (newType) => {
 };
 
 // 3. EVENTS (Created by Organizer)
+// rolePricing: { Participate: 500, Visitor: 200, Couple: 800, Sponsor: 0 }
 export const getEvents = () => {
   try {
     const list = localStorage.getItem('hellozy_events');
@@ -128,7 +197,8 @@ export const getEvents = () => {
           description: 'Join Hellozy in our annual summit showcasing future eco-friendly electric rickshaws, mini logistics fleets, and smart transit capabilities. Sponsors, couples, visitors, and participants are welcome to register.',
           facilities: 'Catering, Free Wi-Fi, VIP Seating Lounge, Presentation Screen, Audio Systems',
           minSponsorAmount: 10000,
-          bookingRoles: ['Participate', 'Visitor', 'Sponsor', 'Couple']
+          bookingRoles: ['Participate', 'Visitor', 'Sponsor', 'Couple'],
+          rolePricing: { Participate: 500, Visitor: 200, Couple: 800, Sponsor: 0 }
         }
       ];
       localStorage.setItem('hellozy_events', JSON.stringify(mockEvents));
@@ -170,11 +240,15 @@ export const getEventApplications = () => {
 export const saveEventApplication = (data) => {
   try {
     const list = getEventApplications();
+    const bookingAmount = Number(data.bookingAmount) || 0;
+    const commissionAmount = calculateCommission(bookingAmount);
     const newApp = {
       id: 'APP-' + Math.floor(100000 + Math.random() * 900000),
       createdAt: new Date().toISOString(),
       status: 'Pending', // Pending / Approved / Rejected
       paymentStatus: 'Pending', // Pending / Successful / Unsuccessful
+      bookingAmount,
+      commissionAmount,
       ...data
     };
     list.unshift(newApp);
