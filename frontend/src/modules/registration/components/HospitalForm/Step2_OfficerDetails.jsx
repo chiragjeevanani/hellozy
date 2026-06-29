@@ -6,13 +6,10 @@ export default function Step2_OfficerDetails({ register, errors, watch, setValue
     <div className="space-y-8">
       {/* Owner Details Card */}
       <div className="bg-stone-50 p-6 rounded-2xl border border-stone-200 space-y-6">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center border-b pb-2">
           <h4 className="text-sm font-bold text-stone-900 font-display uppercase tracking-wider">
             1. Hospital Owner / Managing Director Details
           </h4>
-          <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-stone-200 text-stone-600 font-display">
-            Admin Only
-          </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -96,13 +93,10 @@ export default function Step2_OfficerDetails({ register, errors, watch, setValue
 
       {/* Admin Officer Details Card */}
       <div className="bg-stone-50 p-6 rounded-2xl border border-stone-200 space-y-6">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center border-b pb-2">
           <h4 className="text-sm font-bold text-stone-900 font-display uppercase tracking-wider">
             2. Administrative Officer (Contact Person) Details
           </h4>
-          <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-stone-200 text-stone-600 font-display">
-            Admin Only
-          </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -18,7 +18,7 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
         {/* Vehicle Number */}
         <div className="space-y-2">
           <label className="block text-sm font-bold text-stone-850">
-            Vehicle Number <span className="text-red-500">*</span> <span className="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded font-extrabold uppercase ml-2">Public</span>
+            Vehicle Number <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -34,7 +34,7 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
         {/* Make Name */}
         <div className="space-y-2">
           <label className="block text-sm font-bold text-stone-850">
-            Make / Manufacturer <span className="text-red-500">*</span> <span className="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded font-extrabold uppercase ml-2">Public</span>
+            Make / Manufacturer <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -53,7 +53,6 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
             <label className="block text-sm font-bold text-stone-850">
               Model Name / Number <span className="text-red-500">*</span>
             </label>
-            <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500 border border-stone-200">Admin Only</span>
           </div>
           <input
             type="text"
@@ -69,7 +68,7 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
         {/* Color */}
         <div className="space-y-2">
           <label className="block text-sm font-bold text-stone-850">
-            Vehicle Color <span className="text-red-500">*</span> <span className="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded font-extrabold uppercase ml-2">Public</span>
+            Vehicle Color <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -88,7 +87,6 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
             <label className="block text-sm font-bold text-stone-850">
               Engine Number <span className="text-red-500">*</span>
             </label>
-            <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500 border border-stone-200">Admin Only</span>
           </div>
           <input
             type="text"
@@ -107,7 +105,6 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
             <label className="block text-sm font-bold text-stone-850">
               Chassis Number <span className="text-red-500">*</span>
             </label>
-            <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500 border border-stone-200">Admin Only</span>
           </div>
           <input
             type="text"
@@ -127,7 +124,6 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
               <label className="block text-sm font-bold text-stone-850">
                 Fuel Type <span className="text-red-500">*</span>
               </label>
-              <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500 border border-stone-200">Admin Only</span>
             </div>
             <select
               className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 text-sm font-semibold bg-white focus:outline-none focus:ring-4 focus:ring-accent/15 focus:border-accent cursor-pointer ${
@@ -150,7 +146,7 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
         {!isPickup && (
           <div className="space-y-2">
             <label className="block text-sm font-bold text-stone-850">
-              Seating Capacity <span className="text-red-500">*</span> <span className="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded font-extrabold uppercase ml-2">Public</span>
+              Seating Capacity <span className="text-red-500">*</span>
             </label>
             <input
               type="number"
@@ -169,7 +165,7 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
           <>
             <div className="space-y-2">
               <label className="block text-sm font-bold text-stone-850">
-                Load Capacity (Tons) <span className="text-red-500">*</span> <span className="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded font-extrabold uppercase ml-2">Public</span>
+                Load Capacity (Tons) <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -183,7 +179,7 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
             </div>
             <div className="space-y-2">
               <label className="block text-sm font-bold text-stone-850">
-                Load Bed Dimensions <span className="text-red-500">*</span> <span className="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded font-extrabold uppercase ml-2">Public</span>
+                Load Bed Dimensions <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -202,7 +198,7 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
         {!isPickup && (
           <div className="space-y-3">
             <label className="block text-sm font-bold text-stone-850">
-              Carrier Attached <span className="text-red-500">*</span> <span className="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded font-extrabold uppercase ml-2">Public</span>
+              Carrier Attached <span className="text-red-500">*</span>
             </label>
             <div className="flex gap-3">
               <button
@@ -239,7 +235,6 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
             <label className="block text-sm font-bold text-stone-850">
               HSRP (High Security Plate) <span className="text-red-500">*</span>
             </label>
-            <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500 border border-stone-200">Admin Only</span>
           </div>
           <div className="flex gap-3">
             <button
@@ -275,7 +270,6 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
             <label className="block text-sm font-bold text-stone-850">
               Finance / Loan Status <span className="text-red-500">*</span>
             </label>
-            <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500 border border-stone-200">Admin Only</span>
           </div>
           <div className="flex gap-3">
             <button
@@ -312,7 +306,6 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
               <label className="block text-sm font-bold text-stone-850">
                 Commercial Permit <span className="text-red-500">*</span>
               </label>
-              <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500 border border-stone-200">Admin Only</span>
             </div>
             <div className="flex gap-3">
               <button

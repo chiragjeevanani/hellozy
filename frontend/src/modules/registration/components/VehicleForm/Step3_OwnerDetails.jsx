@@ -13,12 +13,9 @@ export default function Step3_OwnerDetails({ register, errors, watch, setValue }
         
         {/* Owner Full Name */}
         <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <label className="block text-sm font-bold text-stone-850">
-              Owner Full Name <span className="text-red-500">*</span>
-            </label>
-            <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500 border border-stone-200">Admin Only</span>
-          </div>
+          <label className="block text-sm font-bold text-stone-850">
+            Owner Full Name <span className="text-red-500">*</span>
+          </label>
           <input
             type="text"
             placeholder="e.g. Ramesh Kumar"
@@ -32,12 +29,9 @@ export default function Step3_OwnerDetails({ register, errors, watch, setValue }
 
         {/* Owner Address */}
         <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <label className="block text-sm font-bold text-stone-850">
-              Owner Address <span className="text-red-500">*</span>
-            </label>
-            <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500 border border-stone-200">Admin Only</span>
-          </div>
+          <label className="block text-sm font-bold text-stone-850">
+            Owner Address <span className="text-red-500">*</span>
+          </label>
           <input
             type="text"
             placeholder="e.g. H.No 123, Sector 15, Dwarka, Delhi"
@@ -76,12 +70,9 @@ export default function Step3_OwnerDetails({ register, errors, watch, setValue }
 
         {/* WhatsApp Number */}
         <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <label className="block text-sm font-bold text-stone-850">
-              WhatsApp Number <span className="text-red-500">*</span>
-            </label>
-            <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500 border border-stone-200">Admin Only</span>
-          </div>
+          <label className="block text-sm font-bold text-stone-850">
+            WhatsApp Number <span className="text-red-500">*</span>
+          </label>
           <input
             type="tel"
             placeholder="e.g. 9876543210"
@@ -101,12 +92,9 @@ export default function Step3_OwnerDetails({ register, errors, watch, setValue }
 
         {/* Email ID */}
         <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <label className="block text-sm font-bold text-stone-850">
-              Email ID <span className="text-red-500">*</span>
-            </label>
-            <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500 border border-stone-200">Admin Only</span>
-          </div>
+          <label className="block text-sm font-bold text-stone-850">
+            Email ID <span className="text-red-500">*</span>
+          </label>
           <input
             type="email"
             placeholder="e.g. owner@example.com"

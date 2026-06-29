@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getEvents, saveEvent, getEventTypes } from '../../registration/utils/registrationStore';
-import { Calendar, Plus, Tag, MapPin, Plane, ShieldCheck } from 'lucide-react';
+import { Calendar, Plus, Tag, MapPin, Plane, ShieldCheck, Upload } from 'lucide-react';
 
 export default function EventsPage() {
   const [organizer, setOrganizer] = useState(null);
@@ -29,6 +29,21 @@ export default function EventsPage() {
   const [rolePricing, setRolePricing] = useState({ Participate: 500, Visitor: 200, Couple: 800, Sponsor: 0 });
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState('');
+
+  // Event Image & Orientation State
+  const [eventImage, setEventImage] = useState(null);
+  const [imageOrientation, setImageOrientation] = useState('landscape'); // landscape or portrait
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setEventImage({
+        name: file.name,
+        size: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
+        url: URL.createObjectURL(file)
+      });
+    }
+  };
 
   useEffect(() => {
     const session = localStorage.getItem('hellozy_active_organizer');
@@ -74,7 +89,9 @@ export default function EventsPage() {
       eventDate,
       eventLocation,
       requirePassport,
-      requireTravel
+      requireTravel,
+      eventImage,
+      imageOrientation
     };
 
     const saved = saveEvent(newEvent);
@@ -94,6 +111,8 @@ export default function EventsPage() {
       setRequireTravel(true);
       setEnabledRoles({ Participate: true, Visitor: true, Couple: true, Sponsor: true });
       setRolePricing({ Participate: 500, Visitor: 200, Couple: 800, Sponsor: 0 });
+      setEventImage(null);
+      setImageOrientation('landscape');
       setFormError('');
 
       setTimeout(() => {
@@ -206,6 +225,46 @@ export default function EventsPage() {
 
             {/* Traveler & Document Settings */}
             <div className="pt-3 border-t space-y-3">
+              <h4 className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Cover Banner Image</h4>
+              
+              <div className="p-3 border border-stone-200 bg-stone-50 rounded-2xl space-y-3">
+                <span className="text-[10px] font-bold text-stone-550 block mb-1">Cover Photo (JPG/PNG)</span>
+                <label className="border border-dashed border-stone-300 rounded-xl p-4 flex flex-col items-center justify-center bg-white cursor-pointer hover:bg-stone-50/70 transition-colors">
+                  <Upload className="w-5 h-5 text-stone-455 mb-1" />
+                  <span className="text-[10px] text-stone-500 font-bold text-center truncate max-w-[180px]">{eventImage ? eventImage.name : 'Select Image File'}</span>
+                  <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+                </label>
+
+                {eventImage && (
+                  <div className="space-y-1.5 pt-2 border-t border-stone-200">
+                    <label className="text-[9px] font-bold text-stone-500 uppercase tracking-wider block">Crop Orientation</label>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setImageOrientation('landscape')}
+                        className={`flex-1 py-1.5 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
+                          imageOrientation === 'landscape' ? 'bg-primary text-white border-primary shadow-xs' : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
+                        }`}
+                      >
+                        Landscape (16:9)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setImageOrientation('portrait')}
+                        className={`flex-1 py-1.5 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
+                          imageOrientation === 'portrait' ? 'bg-primary text-white border-primary shadow-xs' : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
+                        }`}
+                      >
+                        Portrait (3:4)
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Traveler & Document Settings */}
+            <div className="pt-3 border-t space-y-3">
               <h4 className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Attendee Requirements</h4>
               
               <div className="flex items-center justify-between p-2.5 bg-stone-50 rounded-xl border border-stone-150">
@@ -262,6 +321,14 @@ export default function EventsPage() {
               {events.map(evt => (
                 <div key={evt.id} className="p-4 border border-stone-150 rounded-2xl space-y-3 bg-stone-50/50 hover:bg-stone-50 transition-colors flex flex-col justify-between">
                   <div className="space-y-1.5">
+                    {/* Cover image preview in listing */}
+                    {evt.eventImage?.url && (
+                      <div className={`w-full overflow-hidden rounded-xl bg-stone-100 border border-stone-200/80 mb-2 ${
+                        evt.imageOrientation === 'portrait' ? 'aspect-[3/4]' : 'aspect-video'
+                      }`}>
+                        <img src={evt.eventImage.url} alt={evt.title} className="w-full h-full object-cover" />
+                      </div>
+                    )}
                     <div className="flex justify-between items-start gap-2">
                       <span className="inline-block px-2.5 py-0.5 bg-stone-100 border border-stone-200 text-stone-500 rounded text-[9px] font-bold uppercase">{evt.eventType}</span>
                       <div className="flex gap-1.5">

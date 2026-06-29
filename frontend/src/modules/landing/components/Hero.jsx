@@ -120,12 +120,12 @@ export default function Hero() {
             </motion.div>
             
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-              <a 
-                href="#login" 
-                className="inline-flex items-center justify-center bg-white hover:bg-gray-50 text-gray-800 font-bold py-4 px-8 rounded-xl border border-gray-200 shadow-sm transition-colors w-full sm:w-auto"
+              <Link 
+                to="/login" 
+                className="inline-flex items-center justify-center bg-white hover:bg-gray-50 text-gray-800 font-bold py-4 px-8 rounded-xl border border-gray-200 shadow-sm transition-colors w-full sm:w-auto cursor-pointer"
               >
                 Login
-              </a>
+              </Link>
             </motion.div>
           </motion.div>
         </motion.div>

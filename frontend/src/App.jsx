@@ -34,6 +34,7 @@ import OrganizerEventsPage from './modules/organizer/pages/EventsPage';
 import OrganizerApplicantsPage from './modules/organizer/pages/ApplicantsPage';
 import OrganizerEarningsPage from './modules/organizer/pages/EarningsPage';
 import OrganizerSettingsPage from './modules/organizer/pages/SettingsPage';
+import LoginOptionsPage from './modules/landing/pages/LoginOptionsPage';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -71,6 +72,7 @@ function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginOptionsPage />} />
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/register/success" element={<SuccessScreen />} />
         

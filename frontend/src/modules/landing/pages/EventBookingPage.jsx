@@ -162,6 +162,13 @@ export default function EventBookingPage() {
                         selectedEvent?.id === evt.id ? 'border-accent bg-accent/5' : 'border-stone-200 bg-white hover:border-stone-300'
                       }`}
                     >
+                      {evt.eventImage?.url && (
+                        <div className={`w-full overflow-hidden rounded-xl bg-stone-100 border border-stone-200/80 mb-3 ${
+                          evt.imageOrientation === 'portrait' ? 'aspect-[3/4]' : 'aspect-video'
+                        }`}>
+                          <img src={evt.eventImage.url} alt={evt.title} className="w-full h-full object-cover" />
+                        </div>
+                      )}
                       <div className="flex justify-between items-start">
                         <span className="inline-block px-2.5 py-0.5 bg-stone-100 border text-stone-600 rounded-lg text-[9px] font-extrabold uppercase mb-2">
                           {evt.eventType}

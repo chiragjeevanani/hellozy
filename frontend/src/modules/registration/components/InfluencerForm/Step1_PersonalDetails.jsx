@@ -8,7 +8,7 @@ export default function Step1_PersonalDetails({ register, errors, watch, setValu
         {/* Name */}
         <div>
           <label className="block text-sm font-semibold text-stone-800 mb-1">
-            Full Name <span className="text-red-500">*</span> <span className="text-xs text-emerald-600">(Public)</span>
+            Full Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -21,9 +21,8 @@ export default function Step1_PersonalDetails({ register, errors, watch, setValu
 
         {/* Address */}
         <div>
-          <label className="flex justify-between items-center text-sm font-semibold text-stone-800 mb-1">
-            <span>Residential Address <span className="text-red-500">*</span></span>
-            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500">Admin Only</span>
+          <label className="block text-sm font-semibold text-stone-800 mb-1">
+            Residential Address <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -36,9 +35,8 @@ export default function Step1_PersonalDetails({ register, errors, watch, setValu
 
         {/* Mobile Number */}
         <div>
-          <label className="flex justify-between items-center text-sm font-semibold text-stone-800 mb-1">
-            <span>Mobile Number <span className="text-red-500">*</span></span>
-            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500">Admin Only</span>
+          <label className="block text-sm font-semibold text-stone-800 mb-1">
+            Mobile Number <span className="text-red-500">*</span>
           </label>
           <input
             type="tel"
@@ -54,9 +52,8 @@ export default function Step1_PersonalDetails({ register, errors, watch, setValu
 
         {/* Email */}
         <div>
-          <label className="flex justify-between items-center text-sm font-semibold text-stone-800 mb-1">
-            <span>Email ID <span className="text-red-500">*</span></span>
-            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500">Admin Only</span>
+          <label className="block text-sm font-semibold text-stone-800 mb-1">
+            Email ID <span className="text-red-500">*</span>
           </label>
           <input
             type="email"
@@ -75,7 +72,7 @@ export default function Step1_PersonalDetails({ register, errors, watch, setValu
 
       {/* Social Media Links */}
       <h4 className="text-sm font-bold text-stone-900 font-display uppercase tracking-wider">
-        Social Media Channels <span className="text-xs text-emerald-600">(Public)</span>
+        Social Media Channels
       </h4>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -8,7 +8,7 @@ export default function Step1_HospitalDetails({ register, errors, watch, setValu
         {/* Hospital Name */}
         <div>
           <label className="block text-sm font-semibold text-stone-800 mb-1">
-            Hospital / Clinic Name <span className="text-red-500">*</span> <span className="text-xs text-emerald-600">(Public)</span>
+            Hospital / Clinic Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -22,7 +22,7 @@ export default function Step1_HospitalDetails({ register, errors, watch, setValu
         {/* Hospital Address */}
         <div>
           <label className="block text-sm font-semibold text-stone-800 mb-1">
-            Hospital / Clinic Address <span className="text-red-500">*</span> <span className="text-xs text-emerald-600">(Public)</span>
+            Hospital / Clinic Address <span className="text-red-500">*</span>
           </label>
           <input
             type="text"

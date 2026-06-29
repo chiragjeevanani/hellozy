@@ -17,7 +17,7 @@ export default function Step4_DriverDetails({ register, errors, watch, setValue 
         {/* Driver Name */}
         <div>
           <label className="block text-sm font-semibold text-stone-800 mb-1">
-            Driver Full Name <span className="text-red-500">*</span> <span className="text-xs text-emerald-600">(Public)</span>
+            Driver Full Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -30,9 +30,8 @@ export default function Step4_DriverDetails({ register, errors, watch, setValue 
 
         {/* Driver Address */}
         <div>
-          <label className="flex justify-between items-center text-sm font-semibold text-stone-800 mb-1">
-            <span>Driver Full Address <span className="text-red-500">*</span></span>
-            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500">Admin Only</span>
+          <label className="block text-sm font-semibold text-stone-800 mb-1">
+            Driver Full Address <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -66,9 +65,8 @@ export default function Step4_DriverDetails({ register, errors, watch, setValue 
 
         {/* Driver WhatsApp */}
         <div>
-          <label className="flex justify-between items-center text-sm font-semibold text-stone-800 mb-1">
-            <span>Driver WhatsApp Number <span className="text-red-500">*</span></span>
-            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500">Admin Only</span>
+          <label className="block text-sm font-semibold text-stone-800 mb-1">
+            Driver WhatsApp Number <span className="text-red-500">*</span>
           </label>
           <input
             type="tel"

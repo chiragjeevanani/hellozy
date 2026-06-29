@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowRight, UserCheck } from 'lucide-react';
 
 export default function AccountAccess() {
@@ -22,13 +23,13 @@ export default function AccountAccess() {
           </div>
 
           <div className="md:col-span-4 flex flex-col gap-4 w-full">
-            <a 
-              href="#login" 
-              className="inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent-hover text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition-all"
+            <Link 
+              to="/login" 
+              className="inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent-hover text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
             >
               <span>Go to Login</span>
               <ArrowRight size={18} />
-            </a>
+            </Link>
             <a 
               href="#register" 
               className="inline-flex items-center justify-center bg-white/10 hover:bg-white/20 text-white font-semibold py-3.5 px-6 rounded-xl border border-white/20 transition-all"

@@ -198,13 +198,28 @@ export const getEvents = () => {
           facilities: 'Catering, Free Wi-Fi, VIP Seating Lounge, Presentation Screen, Audio Systems',
           minSponsorAmount: 10000,
           bookingRoles: ['Participate', 'Visitor', 'Sponsor', 'Couple'],
-          rolePricing: { Participate: 500, Visitor: 200, Couple: 800, Sponsor: 0 }
+          rolePricing: { Participate: 500, Visitor: 200, Couple: 800, Sponsor: 0 },
+          eventImage: { url: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800' },
+          imageOrientation: 'landscape'
         }
       ];
       localStorage.setItem('hellozy_events', JSON.stringify(mockEvents));
       return mockEvents;
     }
-    return JSON.parse(list);
+    const parsed = JSON.parse(list);
+    let modified = false;
+    const enriched = parsed.map(evt => {
+      if (!evt.eventImage) {
+        evt.eventImage = { url: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800' };
+        evt.imageOrientation = 'landscape';
+        modified = true;
+      }
+      return evt;
+    });
+    if (modified) {
+      localStorage.setItem('hellozy_events', JSON.stringify(enriched));
+    }
+    return enriched;
   } catch (e) {
     return [];
   }

@@ -53,12 +53,12 @@ export default function Navbar() {
 
           {/* Desktop CTAs */}
           <div className="hidden lg:flex items-center gap-4">
-            <a 
-              href="#login" 
+            <Link 
+              to="/login" 
               className="text-gray-700 hover:text-primary font-semibold transition-colors px-4 py-2"
             >
               Login
-            </a>
+            </Link>
             <Link 
               to="/register" 
               className="bg-primary hover:bg-primary-light text-white font-semibold py-2.5 px-6 rounded-full shadow-md shadow-primary/20 transition-all duration-300 transform hover:-translate-y-0.5"
@@ -130,13 +130,13 @@ export default function Navbar() {
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping"></span>
             </Link>
             <div className="flex flex-col gap-2 pt-2 border-t border-gray-100">
-              <a 
-                href="#login" 
+              <Link 
+                to="/login" 
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-full text-center text-gray-700 font-semibold py-2.5"
               >
                 Login
-              </a>
+              </Link>
               <Link 
                 to="/register" 
                 onClick={() => setMobileMenuOpen(false)}

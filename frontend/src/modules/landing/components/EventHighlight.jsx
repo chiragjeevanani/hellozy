@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Users, Ticket, Heart, Sparkles, ArrowRight, Calendar, Building2, Tag } from 'lucide-react';
+import { Users, Ticket, Heart, Sparkles, ArrowRight, Calendar, Building2, Tag, MapPin } from 'lucide-react';
 import { getEvents } from '../../registration/utils/registrationStore';
 
 const ROLE_TYPE_STYLES = {
@@ -147,6 +147,15 @@ export default function EventHighlight() {
                       transition={{ delay: idx * 0.08, type: "spring", stiffness: 80 }}
                       className="bg-white/8 border border-white/10 rounded-3xl p-5 text-left space-y-3 hover:border-accent/40 hover:bg-white/12 transition-all group"
                     >
+                      {/* Cover photo preview */}
+                      {evt.eventImage?.url && (
+                        <div className={`w-full overflow-hidden rounded-2xl bg-stone-900/50 border border-white/5 ${
+                          evt.imageOrientation === 'portrait' ? 'aspect-[3/4]' : 'aspect-video'
+                        }`}>
+                          <img src={evt.eventImage.url} alt={evt.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-102" />
+                        </div>
+                      )}
+                      
                       <div className="flex items-start justify-between gap-2">
                         <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 border rounded-full text-[10px] font-bold ${badgeStyle}`}>
                           <Tag size={9} /> {evt.eventType}
@@ -158,6 +167,12 @@ export default function EventHighlight() {
                       </h3>
 
                       <p className="text-stone-400 text-[11px] leading-relaxed line-clamp-2">{evt.description}</p>
+
+                      {/* Date & Location row */}
+                      <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[9px] text-stone-400 font-bold">
+                        {evt.eventDate && <span className="flex items-center gap-0.5"><Calendar size={10} className="text-accent" /> {new Date(evt.eventDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</span>}
+                        {evt.eventLocation && <span className="flex items-center gap-0.5"><MapPin size={10} className="text-accent" /> {evt.eventLocation}</span>}
+                      </div>
 
                       <div className="pt-2 border-t border-white/10 flex items-center justify-between gap-2">
                         <div className="flex items-center gap-1.5 text-[10px] text-stone-400 font-semibold">

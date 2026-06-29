@@ -65,11 +65,6 @@ export default function FileUploadField({
         <label className="block text-sm font-semibold text-stone-800">
           {label}
         </label>
-        {isAdminOnly && (
-          <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-stone-100 text-stone-500 border border-stone-200">
-            Admin Only
-          </span>
-        )}
       </div>
 
       {!value ? (
