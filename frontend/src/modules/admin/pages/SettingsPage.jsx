@@ -10,7 +10,7 @@ import {
   setCommissionConfig
 } from '../../registration/utils/registrationStore';
 import { changeAdminCredentials } from '../utils/adminAuth';
-import { CreditCard, KeyRound, CheckCircle2, AlertCircle, Image, Plus, Trash2, Globe, Percent, IndianRupee } from 'lucide-react';
+import { CreditCard, KeyRound, CheckCircle2, AlertCircle, Image, Plus, Trash2, Globe, Percent, IndianRupee, Upload } from 'lucide-react';
 
 export default function SettingsPage() {
   const [paymentConfig, setPaymentConfig] = useState(false);
@@ -33,6 +33,28 @@ export default function SettingsPage() {
   const [newImageUrl, setNewImageUrl] = useState('');
   const [newLinkUrl, setNewLinkUrl] = useState('');
   const [bannerStatus, setBannerStatus] = useState({ type: '', message: '' });
+  const [imageSourceType, setImageSourceType] = useState('url'); // 'url' | 'file'
+  const [uploadedFileName, setUploadedFileName] = useState('');
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      setBannerStatus({ type: 'error', message: 'Image size must be less than 5MB.' });
+      return;
+    }
+
+    setUploadedFileName(file.name);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setNewImageUrl(event.target.result);
+    };
+    reader.onerror = () => {
+      setBannerStatus({ type: 'error', message: 'Failed to read file.' });
+    };
+    reader.readAsDataURL(file);
+  };
 
   useEffect(() => {
     setPaymentConfig(isPaymentEnabled());
@@ -113,6 +135,7 @@ export default function SettingsPage() {
       setNewTitle('');
       setNewImageUrl('');
       setNewLinkUrl('');
+      setUploadedFileName('');
       loadBanners();
       // Auto-clear success message
       setTimeout(() => setBannerStatus({ type: '', message: '' }), 4000);
@@ -340,17 +363,88 @@ export default function SettingsPage() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-bold text-stone-500 uppercase tracking-wider">
-                Image URL *
-              </label>
-              <input
-                type="url"
-                placeholder="https://images.unsplash.com/... or base64"
-                className="w-full px-4 py-2.5 border border-stone-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent"
-                value={newImageUrl}
-                onChange={(e) => setNewImageUrl(e.target.value)}
-                required
-              />
+              <div className="flex justify-between items-center mb-1">
+                <label className="text-[10px] font-bold text-stone-500 uppercase tracking-wider">
+                  Banner Image *
+                </label>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImageSourceType('url');
+                      setNewImageUrl('');
+                      setUploadedFileName('');
+                    }}
+                    className={`text-[9px] font-bold px-2 py-0.5 rounded transition-all cursor-pointer ${
+                      imageSourceType === 'url'
+                        ? 'bg-accent/10 text-accent border border-accent/25'
+                        : 'text-stone-400 hover:text-stone-600 border border-transparent'
+                    }`}
+                  >
+                    Image URL
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImageSourceType('file');
+                      setNewImageUrl('');
+                      setUploadedFileName('');
+                    }}
+                    className={`text-[9px] font-bold px-2 py-0.5 rounded transition-all cursor-pointer ${
+                      imageSourceType === 'file'
+                        ? 'bg-accent/10 text-accent border border-accent/25'
+                        : 'text-stone-400 hover:text-stone-600 border border-transparent'
+                    }`}
+                  >
+                    Upload File
+                  </button>
+                </div>
+              </div>
+
+              {imageSourceType === 'url' ? (
+                <input
+                  type="url"
+                  placeholder="https://images.unsplash.com/... or base64"
+                  className="w-full px-4 py-2.5 border border-stone-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent"
+                  value={newImageUrl}
+                  onChange={(e) => setNewImageUrl(e.target.value)}
+                  required={imageSourceType === 'url'}
+                />
+              ) : (
+                <div className="space-y-2">
+                  <div className="relative border border-dashed border-stone-300 hover:border-stone-400 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-stone-50/50 transition-colors duration-150 cursor-pointer min-h-[90px]">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      onChange={handleFileChange}
+                      required={imageSourceType === 'file' && !newImageUrl}
+                    />
+                    <div className="text-center pointer-events-none">
+                      <Upload className="w-5 h-5 text-stone-450 mx-auto mb-1.5" />
+                      <span className="text-[11px] text-stone-650 font-bold block">
+                        {uploadedFileName ? uploadedFileName : "Click to select an image"}
+                      </span>
+                      <span className="text-[9px] text-stone-400 block mt-0.5">
+                        PNG, JPG, JPEG, WEBP or GIF (max 5MB)
+                      </span>
+                    </div>
+                  </div>
+                  {newImageUrl && (
+                    <div className="flex items-center gap-2.5 px-3 py-2 bg-stone-50 rounded-xl border border-stone-150">
+                      <img src={newImageUrl} alt="Preview" className="w-10 h-7 object-cover rounded border border-stone-200" />
+                      <span className="text-[10px] text-stone-500 font-semibold truncate max-w-[180px]">Previewing selected image</span>
+                      <button 
+                        type="button"
+                        onClick={() => { setNewImageUrl(''); setUploadedFileName(''); }}
+                        className="text-[10px] text-red-500 hover:text-red-650 hover:underline font-bold ml-auto cursor-pointer"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="space-y-1.5">

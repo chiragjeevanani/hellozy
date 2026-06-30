@@ -26,7 +26,7 @@ export default function Footer() {
     { label: "Privacy Policy", to: "/privacy" },
     { label: "Refund Policy", to: "/refund" },
     { label: "Cancellation Policy", to: "/cancellation" },
-    { label: "Organizer Access", to: "/organizer/login" }
+    { label: "Portal Access", to: "/login" }
   ];
 
   const services = [
@@ -49,7 +49,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-primary text-gray-300 pt-20 pb-10 px-4 md:px-8 border-t border-white/10 relative text-left">
+    <footer className="bg-[#3d2314] bg-primary text-gray-300 pt-20 pb-10 px-4 md:px-8 border-t border-white/10 relative text-left">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 pb-16 border-b border-white/10">
         
         {/* Brand Column */}
@@ -86,7 +86,7 @@ export default function Footer() {
           <ul className="flex flex-col gap-3.5 text-sm">
             {quickLinks.map((link, index) => (
               <li key={index}>
-                <Link to={link.to} className="hover:text-accent transition-colors">
+                <Link to={link.to} className="text-stone-300 hover:text-accent transition-colors">
                   {link.label}
                 </Link>
               </li>
@@ -102,7 +102,7 @@ export default function Footer() {
           <ul className="flex flex-col gap-3.5 text-sm">
             {services.map((link, index) => (
               <li key={index}>
-                <a href={link.href} className="hover:text-accent transition-colors block">
+                <a href={link.href} className="text-stone-300 hover:text-accent transition-colors block">
                   {link.label}
                 </a>
               </li>
@@ -117,8 +117,8 @@ export default function Footer() {
           Copyright 2026 © All Right Reserved Design by <span className="text-white font-semibold">Hellozy</span>
         </p>
         <div className="flex gap-6 text-sm">
-          <Link to="/privacy" className="hover:text-accent transition-colors">Privacy Policy</Link>
-          <Link to="/terms" className="hover:text-accent transition-colors">Terms & Conditions</Link>
+          <Link to="/privacy" className="text-stone-300 hover:text-accent transition-colors">Privacy Policy</Link>
+          <Link to="/terms" className="text-stone-300 hover:text-accent transition-colors">Terms & Conditions</Link>
         </div>
       </div>
 

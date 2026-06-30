@@ -31,7 +31,7 @@ export default function AdminLoginPage() {
       <motion.div 
         animate={shake ? { x: [-10, 10, -10, 10, 0] } : {}}
         transition={{ duration: 0.4 }}
-        className="w-full max-w-md bg-stone-950/80 border border-stone-850 rounded-3xl p-8 md:p-10 shadow-2xl relative z-10 backdrop-blur-md"
+        className="w-full max-w-md bg-[#0c0a09] bg-stone-950/95 border border-stone-850 rounded-3xl p-8 md:p-10 shadow-2xl relative z-10 backdrop-blur-md"
       >
         {/* Brand Header */}
         <div className="text-center mb-8">

@@ -5,7 +5,7 @@ import { ArrowRight, UserCheck } from 'lucide-react';
 export default function AccountAccess() {
   return (
     <section className="py-24 px-4 md:px-8 bg-white">
-      <div className="max-w-5xl mx-auto bg-gradient-to-br from-primary to-primary-light rounded-3xl p-8 md:p-12 text-white relative overflow-hidden shadow-2xl shadow-primary/20">
+      <div className="max-w-5xl mx-auto bg-[#3d2314] bg-gradient-to-br from-primary to-primary-light rounded-3xl p-8 md:p-12 text-white relative overflow-hidden shadow-2xl shadow-primary/20">
         {/* Background glow */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-accent/20 rounded-full blur-3xl -mr-20 -mt-20"></div>
 

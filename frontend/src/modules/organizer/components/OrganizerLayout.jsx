@@ -17,7 +17,7 @@ export default function OrganizerLayout() {
 
   const handleLogout = () => {
     localStorage.removeItem('hellozy_active_organizer');
-    navigate('/organizer/login', { replace: true });
+    navigate('/login', { replace: true });
   };
 
   return (

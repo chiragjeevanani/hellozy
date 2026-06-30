@@ -51,7 +51,7 @@ export default function EventHighlight() {
   }, []);
 
   return (
-    <section className="py-24 px-4 md:px-8 bg-gradient-to-br from-stone-900 via-stone-850 to-primary text-white overflow-hidden relative">
+    <section className="py-24 px-4 md:px-8 bg-[#1c1917] bg-gradient-to-br from-stone-900 via-stone-850 to-primary text-white overflow-hidden relative">
       {/* Subtle grid pattern background */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
 

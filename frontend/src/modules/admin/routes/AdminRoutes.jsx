@@ -5,5 +5,5 @@ import { isAuthenticated } from '../utils/adminAuth';
 export default function AdminRoutes() {
   const auth = isAuthenticated();
   
-  return auth ? <Outlet /> : <Navigate to="/admin/login" replace />;
+  return auth ? <Outlet /> : <Navigate to="/login" replace />;
 }

@@ -34,7 +34,7 @@ import OrganizerEventsPage from './modules/organizer/pages/EventsPage';
 import OrganizerApplicantsPage from './modules/organizer/pages/ApplicantsPage';
 import OrganizerEarningsPage from './modules/organizer/pages/EarningsPage';
 import OrganizerSettingsPage from './modules/organizer/pages/SettingsPage';
-import LoginOptionsPage from './modules/landing/pages/LoginOptionsPage';
+import UnifiedLoginPage from './modules/landing/pages/UnifiedLoginPage';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -52,7 +52,12 @@ function App() {
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
       smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+      infinite: false,
     });
 
     function raf(time) {
@@ -72,7 +77,7 @@ function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginOptionsPage />} />
+        <Route path="/login" element={<UnifiedLoginPage />} />
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/register/success" element={<SuccessScreen />} />
         
