@@ -10,9 +10,9 @@ export default function Navbar() {
       {/* Top bar */}
       <div className="bg-primary text-white text-xs py-2 px-4 md:px-8 flex flex-col md:flex-row justify-between items-center gap-2 border-b border-white/10">
         <div className="flex items-center gap-6">
-          <a href="tel:91-93-911-911" className="flex items-center gap-1.5 hover:text-accent transition-colors">
+          <a href="tel:+919399717375" className="flex items-center gap-1.5 hover:text-accent transition-colors">
             <Phone size={14} className="text-accent" />
-            <span>91-93-911-911</span>
+            <span>+91 93997 17375</span>
           </a>
           <a href="mailto:customercare@hellozy.com" className="flex items-center gap-1.5 hover:text-accent transition-colors">
             <Mail size={14} className="text-accent" />

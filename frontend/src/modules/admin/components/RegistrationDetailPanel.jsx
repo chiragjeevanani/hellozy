@@ -34,7 +34,7 @@ export default function RegistrationDetailPanel({ selected, onClose, onUpdateSta
     </div>
   );
 
-  const isVehicle = ['four-wheeler', 'pickup', 'bus', 'e-rickshaw'].includes(selected.type);
+  const isVehicle = ['four-wheeler', 'pickup', 'bus', 'three-wheeler', 'e-rickshaw'].includes(selected.type);
 
   return (
     <div className="bg-white border border-stone-250 rounded-3xl p-6 shadow-md flex flex-col h-full overflow-hidden text-left">

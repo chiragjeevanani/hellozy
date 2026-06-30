@@ -35,9 +35,9 @@ const REGISTRATION_TYPES = [
     color: 'from-yellow-800 to-amber-950',
   },
   {
-    id: 'e-rickshaw',
-    title: 'E-Rickshaw Owner',
-    description: 'Register eco-friendly electric rickshaws for local transit.',
+    id: 'three-wheeler',
+    title: '3-Wheeler Owner',
+    description: 'Register auto rickshaws, e-rickshaws & local transit 3-wheelers for passenger transit.',
     icon: Zap,
     color: 'from-amber-600 to-amber-800',
   },

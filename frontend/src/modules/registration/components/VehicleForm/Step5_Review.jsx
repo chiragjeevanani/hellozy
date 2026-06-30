@@ -4,9 +4,10 @@ import { ShieldCheck, Eye, EyeOff, Edit3 } from 'lucide-react';
 
 export default function Step5_Review({ watch, onEditStep, type, paymentEnabled }) {
   const values = watch();
-  const isPickup = type === 'pickup';
-  const isBus = type === 'bus';
-  const isERickshaw = type === 'e-rickshaw';
+  const vehicleCategory = values.vehicleCategory || type || 'four-wheeler';
+  const isPickup = vehicleCategory === 'pickup';
+  const isBus = vehicleCategory === 'bus';
+  const isERickshaw = vehicleCategory === 'e-rickshaw' || vehicleCategory === 'three-wheeler';
   const isOwnerDriver = values.isOwnerDriver === 'yes';
 
   // Render a tiny image/file badge
@@ -67,6 +68,7 @@ export default function Step5_Review({ watch, onEditStep, type, paymentEnabled }
         }
       >
         <div className="space-y-3">
+          {values.vehicleCategory && renderField("Vehicle Category", values.vehicleCategory.replace('-', ' ').toUpperCase(), true)}
           {renderField("Vehicle Number", values.vehicleNumber, true)}
           {renderField("Make / Brand", values.makeName, true)}
           {renderField("Model / Variant", values.modelNumber, false)}

@@ -29,7 +29,12 @@ export default function RegistrationTable({ registrations, onSelectRow, selected
     }
 
     if (filterType !== 'all') {
-      result = result.filter(r => r.type === filterType);
+      result = result.filter(r => {
+        if (filterType === 'three-wheeler') {
+          return r.type === 'three-wheeler' || r.type === 'e-rickshaw';
+        }
+        return r.type === filterType;
+      });
     }
 
     if (filterStatus !== 'all') {
@@ -71,7 +76,7 @@ export default function RegistrationTable({ registrations, onSelectRow, selected
             <option value="four-wheeler">4-Wheeler</option>
             <option value="pickup">Pickup</option>
             <option value="bus">Bus</option>
-            <option value="e-rickshaw">E-Rickshaw</option>
+            <option value="three-wheeler">3-Wheeler</option>
             <option value="hospital">Hospital</option>
             <option value="influencer">Influencer</option>
           </select>

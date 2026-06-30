@@ -2,9 +2,10 @@ import React from 'react';
 import FileUploadField from '../shared/FileUploadField';
 
 export default function Step1_VehicleDetails({ register, errors, type, watch, setValue }) {
-  const isPickup = type === 'pickup';
-  const isBus = type === 'bus';
-  const isERickshaw = type === 'e-rickshaw';
+  const vehicleCategory = watch('vehicleCategory') || type || 'four-wheeler';
+  const isPickup = vehicleCategory === 'pickup';
+  const isBus = vehicleCategory === 'bus';
+  const isERickshaw = vehicleCategory === 'e-rickshaw' || vehicleCategory === 'three-wheeler';
 
   const commercialPermit = watch('commercialPermit');
   const isFinanced = watch('financed');
@@ -14,6 +15,33 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
   return (
     <div className="space-y-8 text-left">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        {/* Vehicle Category Dropdown */}
+        <div className="space-y-2 md:col-span-2">
+          <label className="block text-sm font-bold text-stone-850">
+            Vehicle Type / Category <span className="text-red-500">*</span>
+          </label>
+          <select
+            className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 text-sm font-semibold bg-white focus:outline-none focus:ring-4 focus:ring-accent/15 focus:border-accent cursor-pointer ${
+              errors.vehicleCategory ? 'border-red-400 bg-red-50/10' : 'border-stone-200 hover:border-stone-300'
+            }`}
+            {...register('vehicleCategory', { required: 'Vehicle Category is required' })}
+            onChange={(e) => {
+              setValue('vehicleCategory', e.target.value, { shouldValidate: true });
+              // Clear fields that are conditional on category
+              setValue('fuelType', '');
+              setValue('seatingCapacity', '');
+              setValue('loadCapacity', '');
+              setValue('dimensions', '');
+              setValue('carrier', 'no');
+            }}
+          >
+            <option value="four-wheeler">4-Wheeler (Hatchbacks, Sedans, SUVs, Cabs)</option>
+            <option value="three-wheeler">3-Wheeler (Auto Rickshaws, E-Rickshaws)</option>
+            <option value="pickup">Pickup (Loading Trucks, Commercial Carriers)</option>
+            <option value="bus">Bus (Mini-buses, Coaches)</option>
+          </select>
+        </div>
         
         {/* Vehicle Number */}
         <div className="space-y-2">

@@ -83,7 +83,7 @@ export default function DashboardPage() {
     { name: '4-Wheeler', count: typeCounts['four-wheeler'] || 0 },
     { name: 'Pickup', count: typeCounts['pickup'] || 0 },
     { name: 'Bus', count: typeCounts['bus'] || 0 },
-    { name: 'E-Rickshaw', count: typeCounts['e-rickshaw'] || 0 },
+    { name: '3-Wheeler', count: (typeCounts['three-wheeler'] || 0) + (typeCounts['e-rickshaw'] || 0) },
     { name: 'Hospital', count: typeCounts['hospital'] || 0 },
     { name: 'Influencer', count: typeCounts['influencer'] || 0 },
   ];

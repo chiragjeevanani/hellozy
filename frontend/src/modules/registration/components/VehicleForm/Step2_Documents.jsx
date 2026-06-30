@@ -2,8 +2,9 @@ import React from 'react';
 import FileUploadField from '../shared/FileUploadField';
 
 export default function Step2_Documents({ register, errors, watch, setValue, type }) {
-  const isERickshaw = type === 'e-rickshaw';
-  const isBus = type === 'bus';
+  const vehicleCategory = watch('vehicleCategory') || type || 'four-wheeler';
+  const isERickshaw = vehicleCategory === 'e-rickshaw' || vehicleCategory === 'three-wheeler';
+  const isBus = vehicleCategory === 'bus';
 
   // Watch file fields
   const aadharDoc = watch('aadharDoc');

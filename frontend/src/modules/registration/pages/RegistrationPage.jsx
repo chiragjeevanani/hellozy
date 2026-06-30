@@ -32,22 +32,34 @@ export default function RegistrationPage() {
   const [step, setStep] = useState(0);
   const [paymentActive, setPaymentActive] = useState(false);
 
+  const initialType = searchParams.get('type') || 'four-wheeler';
+  const defaultCategory = ['four-wheeler', 'pickup', 'bus', 'three-wheeler', 'e-rickshaw'].includes(initialType)
+    ? (initialType === 'e-rickshaw' ? 'three-wheeler' : initialType)
+    : 'four-wheeler';
+
   const { register, handleSubmit, watch, setValue, trigger, formState: { errors } } = useForm({
     defaultValues: {
       isOwnerDriver: 'yes',
       financed: 'no',
       commercialPermit: 'no',
       hasGst: 'no',
+      vehicleCategory: defaultCategory,
     }
   });
 
   const isOwnerDriver = watch('isOwnerDriver') === 'yes';
+  const isVehicleFlow = type === 'vehicle' || ['four-wheeler', 'pickup', 'bus', 'three-wheeler', 'e-rickshaw'].includes(type);
+  const vehicleCategory = watch('vehicleCategory') || 'four-wheeler';
 
   useEffect(() => {
     // Reset step when registration type changes
     setStep(0);
     setPaymentActive(isPaymentEnabled());
-  }, [type]);
+
+    if (['four-wheeler', 'pickup', 'bus', 'three-wheeler', 'e-rickshaw'].includes(type)) {
+      setValue('vehicleCategory', type === 'e-rickshaw' ? 'three-wheeler' : type);
+    }
+  }, [type, setValue]);
 
   const handleSelectType = (selectedType) => {
     if (selectedType === 'event-registration') {
@@ -78,7 +90,7 @@ export default function RegistrationPage() {
   ];
 
   const getSteps = () => {
-    if (['four-wheeler', 'pickup', 'bus', 'e-rickshaw'].includes(type)) return vehicleSteps;
+    if (isVehicleFlow) return vehicleSteps;
     if (type === 'hospital') return hospitalSteps;
     if (type === 'influencer') return influencerSteps;
     return [];
@@ -90,17 +102,17 @@ export default function RegistrationPage() {
     // Determine which fields are in current step and trigger validation
     let fieldsToValidate = [];
     
-    if (['four-wheeler', 'pickup', 'bus', 'e-rickshaw'].includes(type)) {
+    if (isVehicleFlow) {
       if (step === 0) {
-        fieldsToValidate = ['vehicleNumber', 'makeName', 'modelNumber', 'vehicleColor', 'engineNumber', 'chassisNumber', 'hsrp', 'financed', 'isOwnerDriver'];
-        if (type !== 'e-rickshaw') fieldsToValidate.push('fuelType', 'commercialPermit');
-        if (type !== 'pickup') fieldsToValidate.push('seatingCapacity', 'carrier');
-        if (type === 'pickup') fieldsToValidate.push('loadCapacity', 'dimensions');
+        fieldsToValidate = ['vehicleCategory', 'vehicleNumber', 'makeName', 'modelNumber', 'vehicleColor', 'engineNumber', 'chassisNumber', 'hsrp', 'financed', 'isOwnerDriver'];
+        if (vehicleCategory !== 'e-rickshaw' && vehicleCategory !== 'three-wheeler') fieldsToValidate.push('fuelType', 'commercialPermit');
+        if (vehicleCategory !== 'pickup') fieldsToValidate.push('seatingCapacity', 'carrier');
+        if (vehicleCategory === 'pickup') fieldsToValidate.push('loadCapacity', 'dimensions');
         if (watch('financed') === 'yes') fieldsToValidate.push('financierName', 'financeDate');
         if (watch('commercialPermit') === 'yes') fieldsToValidate.push('permitDoc');
       } else if (step === 1) {
         fieldsToValidate = ['aadharDoc', 'rcDoc', 'insuranceDoc', 'dlDoc', 'agreementDoc', 'tcDoc', 'bankDoc', 'addressPhoto', 'dlNumber', 'dlIssueDate', 'dlValidityDate', 'dlAuthority'];
-        if (type !== 'e-rickshaw' && type !== 'bus') fieldsToValidate.push('pucDoc');
+        if (vehicleCategory !== 'e-rickshaw' && vehicleCategory !== 'three-wheeler' && vehicleCategory !== 'bus') fieldsToValidate.push('pucDoc');
         if (watch('hasGst') === 'yes') fieldsToValidate.push('gstNumber');
       } else if (step === 2) {
         fieldsToValidate = ['ownerName', 'ownerAddress', 'ownerMobile', 'ownerWhatsapp', 'ownerEmail', 'ownerPhoto', 'vehiclePhoto', 'isOwnerDriver'];
@@ -152,19 +164,20 @@ export default function RegistrationPage() {
       }
     });
 
+    const finalType = isVehicleFlow ? vehicleCategory : type;
     const saved = saveRegistration({
-      type,
+      type: finalType,
       ...cleanData
     });
 
     if (saved) {
-      navigate('/register/success', { state: { registrationId: saved.id, type } });
+      navigate('/register/success', { state: { registrationId: saved.id, type: finalType } });
     }
   };
 
   // Render Step Body
   const renderStepContent = () => {
-    if (['four-wheeler', 'pickup', 'bus', 'e-rickshaw'].includes(type)) {
+    if (isVehicleFlow) {
       switch (step) {
         case 0:
           return <Step1_VehicleDetails register={register} errors={errors} type={type} watch={watch} setValue={setValue} />;
@@ -244,7 +257,7 @@ export default function RegistrationPage() {
         <div className="bg-white rounded-3xl border border-stone-200/80 p-6 md:p-10 shadow-xs">
           <div className="mb-10 text-center md:text-left">
             <h1 className="text-2xl font-extrabold text-primary font-display capitalize">
-              {type.replace('-', ' ')} Registration
+              {isVehicleFlow ? 'Vehicle Partner' : type.replace('-', ' ')} Registration
             </h1>
             <p className="text-stone-500 text-sm mt-1">
               Please provide valid certificates. All submissions are cross-referenced manually.

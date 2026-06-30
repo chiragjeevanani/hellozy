@@ -46,7 +46,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <h4 className="text-xs font-bold text-stone-400 uppercase tracking-wider">Call Us</h4>
-                <p className="text-stone-800 font-bold mt-1 text-sm sm:text-base">91-93-911-911</p>
+                <p className="text-stone-800 font-bold mt-1 text-sm sm:text-base">+91 93997 17375</p>
                 <p className="text-stone-500 text-xs mt-0.5">Mon - Sat: 9:00 AM - 6:00 PM</p>
               </div>
             </div>
@@ -68,8 +68,8 @@ export default function ContactPage() {
               </div>
               <div>
                 <h4 className="text-xs font-bold text-stone-400 uppercase tracking-wider">Our Hub Office</h4>
-                <p className="text-stone-800 font-bold mt-1 text-sm sm:text-base">Dwarka Sector-12, Hub Building</p>
-                <p className="text-stone-500 text-xs mt-0.5">New Delhi, Delhi - 110075</p>
+                <p className="text-stone-800 font-bold mt-1 text-sm sm:text-base">Near idea tower near madan gaurd</p>
+                <p className="text-stone-500 text-xs mt-0.5">Manendragarh Distt MCB - 497442</p>
               </div>
             </div>
           </motion.div>
