@@ -11,6 +11,8 @@ export default function AdminTopbar({ onToggleSidebar, onLogout }) {
         return 'Dashboard Overview';
       case '/admin/registrations':
         return 'Registrations Hub';
+      case '/admin/events':
+        return 'Event Requests';
       case '/admin/organizers':
         return 'Event Organizers';
       case '/admin/event-types':

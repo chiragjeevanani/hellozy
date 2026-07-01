@@ -200,7 +200,8 @@ export const getEvents = () => {
           bookingRoles: ['Participate', 'Visitor', 'Sponsor', 'Couple'],
           rolePricing: { Participate: 500, Visitor: 200, Couple: 800, Sponsor: 0 },
           eventImage: { url: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800' },
-          imageOrientation: 'landscape'
+          imageOrientation: 'landscape',
+          status: 'Approved'
         }
       ];
       localStorage.setItem('hellozy_events', JSON.stringify(mockEvents));
@@ -209,11 +210,17 @@ export const getEvents = () => {
     const parsed = JSON.parse(list);
     let modified = false;
     const enriched = parsed.map(evt => {
+      let updated = false;
       if (!evt.eventImage) {
         evt.eventImage = { url: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800' };
         evt.imageOrientation = 'landscape';
-        modified = true;
+        updated = true;
       }
+      if (!evt.status) {
+        evt.status = 'Approved';
+        updated = true;
+      }
+      if (updated) modified = true;
       return evt;
     });
     if (modified) {
@@ -231,6 +238,7 @@ export const saveEvent = (data) => {
     const newEvent = {
       id: 'EVT-' + Math.floor(100000 + Math.random() * 900000),
       createdAt: new Date().toISOString(),
+      status: 'Pending',
       ...data
     };
     list.unshift(newEvent);
@@ -238,6 +246,22 @@ export const saveEvent = (data) => {
     return newEvent;
   } catch (e) {
     console.error("Failed to save event", e);
+    return null;
+  }
+};
+
+export const updateEvent = (updatedEvt) => {
+  try {
+    const list = getEvents();
+    const idx = list.findIndex(e => e.id === updatedEvt.id);
+    if (idx !== -1) {
+      list[idx] = { ...list[idx], ...updatedEvt };
+      localStorage.setItem('hellozy_events', JSON.stringify(list));
+      return list[idx];
+    }
+    return null;
+  } catch (e) {
+    console.error("Failed to update event", e);
     return null;
   }
 };

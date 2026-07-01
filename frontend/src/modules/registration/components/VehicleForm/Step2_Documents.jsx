@@ -5,6 +5,9 @@ export default function Step2_Documents({ register, errors, watch, setValue, typ
   const vehicleCategory = watch('vehicleCategory') || type || 'four-wheeler';
   const isERickshaw = vehicleCategory === 'e-rickshaw' || vehicleCategory === 'three-wheeler';
   const isBus = vehicleCategory === 'bus';
+  const fuelType = watch('fuelType');
+  const vehicleType = watch('vehicleType');
+  const isElectric = fuelType === 'electric' || vehicleType === 'electric-bike' || isERickshaw;
 
   // Watch file fields
   const aadharDoc = watch('aadharDoc');
@@ -54,8 +57,8 @@ export default function Step2_Documents({ register, errors, watch, setValue, typ
           isAdminOnly={true}
         />
 
-        {/* PUC - Hide for Electric Rickshaws and Buses */}
-        {!isERickshaw && !isBus && (
+        {/* PUC - Hide for Electric Vehicles and Buses */}
+        {!isElectric && !isBus && (
           <FileUploadField
             label="PUC Certificate *"
             value={pucDoc}

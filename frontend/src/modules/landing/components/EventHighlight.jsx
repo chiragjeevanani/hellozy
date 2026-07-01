@@ -46,8 +46,9 @@ export default function EventHighlight() {
 
   useEffect(() => {
     const allEvents = getEvents();
+    const approved = allEvents.filter(e => e.status === 'Approved');
     // Show max 4 events on landing page
-    setEvents(allEvents.slice(0, 4));
+    setEvents(approved.slice(0, 4));
   }, []);
 
   return (

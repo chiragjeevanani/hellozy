@@ -37,7 +37,9 @@ export default function EventBookingPage() {
   const [successApp, setSuccessApp] = useState(null);
 
   useEffect(() => {
-    setEvents(getEvents());
+    const all = getEvents();
+    const approved = all.filter(e => e.status === 'Approved');
+    setEvents(approved);
   }, []);
 
   // Derive booking amount from event's rolePricing for selected role

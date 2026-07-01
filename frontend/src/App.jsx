@@ -19,6 +19,7 @@ import AdminLayout from './modules/admin/components/AdminLayout';
 import AdminLoginPage from './modules/admin/pages/AdminLoginPage';
 import DashboardPage from './modules/admin/pages/DashboardPage';
 import RegistrationsPage from './modules/admin/pages/RegistrationsPage';
+import AdminEventsPage from './modules/admin/pages/AdminEventsPage';
 import SettingsPage from './modules/admin/pages/SettingsPage';
 import AdminOrganizersPage from './modules/admin/pages/AdminOrganizersPage';
 import AdminEventTypesPage from './modules/admin/pages/AdminEventTypesPage';
@@ -31,6 +32,7 @@ import OrganizerLayout from './modules/organizer/components/OrganizerLayout';
 import OrganizerLoginPage from './modules/organizer/pages/OrganizerLoginPage';
 import OrganizerDashboardPage from './modules/organizer/pages/DashboardPage';
 import OrganizerEventsPage from './modules/organizer/pages/EventsPage';
+import OrganizerProposalsPage from './modules/organizer/pages/ProposalsPage';
 import OrganizerApplicantsPage from './modules/organizer/pages/ApplicantsPage';
 import OrganizerEarningsPage from './modules/organizer/pages/EarningsPage';
 import OrganizerSettingsPage from './modules/organizer/pages/SettingsPage';
@@ -87,6 +89,7 @@ function App() {
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<DashboardPage />} />
             <Route path="/admin/registrations" element={<RegistrationsPage />} />
+            <Route path="/admin/events" element={<AdminEventsPage />} />
             <Route path="/admin/organizers" element={<AdminOrganizersPage />} />
             <Route path="/admin/event-types" element={<AdminEventTypesPage />} />
             <Route path="/admin/bookings" element={<AdminBookingsPage />} />
@@ -101,6 +104,7 @@ function App() {
           <Route element={<OrganizerLayout />}>
             <Route path="/organizer" element={<OrganizerDashboardPage />} />
             <Route path="/organizer/events" element={<OrganizerEventsPage />} />
+            <Route path="/organizer/proposals" element={<OrganizerProposalsPage />} />
             <Route path="/organizer/applicants" element={<OrganizerApplicantsPage />} />
             <Route path="/organizer/earnings" element={<OrganizerEarningsPage />} />
             <Route path="/organizer/settings" element={<OrganizerSettingsPage />} />

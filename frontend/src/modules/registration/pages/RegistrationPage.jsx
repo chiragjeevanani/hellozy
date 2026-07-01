@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, ShieldCheck, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import RegistrationTypeSelector from '../components/RegistrationTypeSelector';
+import VehicleCategorySelector from '../components/VehicleCategorySelector';
 import ProgressBar from '../components/shared/ProgressBar';
 
 // Vehicle Forms Steps
@@ -33,7 +34,7 @@ export default function RegistrationPage() {
   const [paymentActive, setPaymentActive] = useState(false);
 
   const initialType = searchParams.get('type') || 'four-wheeler';
-  const defaultCategory = ['four-wheeler', 'pickup', 'bus', 'three-wheeler', 'e-rickshaw'].includes(initialType)
+  const defaultCategory = ['four-wheeler', 'pickup', 'bus', 'three-wheeler', 'e-rickshaw', 'bike'].includes(initialType)
     ? (initialType === 'e-rickshaw' ? 'three-wheeler' : initialType)
     : 'four-wheeler';
 
@@ -48,7 +49,7 @@ export default function RegistrationPage() {
   });
 
   const isOwnerDriver = watch('isOwnerDriver') === 'yes';
-  const isVehicleFlow = type === 'vehicle' || ['four-wheeler', 'pickup', 'bus', 'three-wheeler', 'e-rickshaw'].includes(type);
+  const isVehicleFlow = type === 'vehicle' || ['four-wheeler', 'pickup', 'bus', 'three-wheeler', 'e-rickshaw', 'bike'].includes(type);
   const vehicleCategory = watch('vehicleCategory') || 'four-wheeler';
 
   useEffect(() => {
@@ -56,7 +57,7 @@ export default function RegistrationPage() {
     setStep(0);
     setPaymentActive(isPaymentEnabled());
 
-    if (['four-wheeler', 'pickup', 'bus', 'three-wheeler', 'e-rickshaw'].includes(type)) {
+    if (['four-wheeler', 'pickup', 'bus', 'three-wheeler', 'e-rickshaw', 'bike'].includes(type)) {
       setValue('vehicleCategory', type === 'e-rickshaw' ? 'three-wheeler' : type);
     }
   }, [type, setValue]);
@@ -104,7 +105,7 @@ export default function RegistrationPage() {
     
     if (isVehicleFlow) {
       if (step === 0) {
-        fieldsToValidate = ['vehicleCategory', 'vehicleNumber', 'makeName', 'modelNumber', 'vehicleColor', 'engineNumber', 'chassisNumber', 'hsrp', 'financed', 'isOwnerDriver'];
+        fieldsToValidate = ['vehicleCategory', 'vehicleType', 'customVehicleType', 'vehicleNumber', 'makeName', 'modelNumber', 'vehicleColor', 'engineNumber', 'chassisNumber', 'hsrp', 'financed', 'isOwnerDriver'];
         if (vehicleCategory !== 'e-rickshaw' && vehicleCategory !== 'three-wheeler') fieldsToValidate.push('fuelType', 'commercialPermit');
         if (vehicleCategory !== 'pickup') fieldsToValidate.push('seatingCapacity', 'carrier');
         if (vehicleCategory === 'pickup') fieldsToValidate.push('loadCapacity', 'dimensions');
@@ -112,7 +113,8 @@ export default function RegistrationPage() {
         if (watch('commercialPermit') === 'yes') fieldsToValidate.push('permitDoc');
       } else if (step === 1) {
         fieldsToValidate = ['aadharDoc', 'rcDoc', 'insuranceDoc', 'dlDoc', 'agreementDoc', 'tcDoc', 'bankDoc', 'addressPhoto', 'dlNumber', 'dlIssueDate', 'dlValidityDate', 'dlAuthority'];
-        if (vehicleCategory !== 'e-rickshaw' && vehicleCategory !== 'three-wheeler' && vehicleCategory !== 'bus') fieldsToValidate.push('pucDoc');
+        const isElectric = watch('fuelType') === 'electric' || watch('vehicleType') === 'electric-bike' || vehicleCategory === 'three-wheeler' || vehicleCategory === 'e-rickshaw';
+        if (vehicleCategory !== 'e-rickshaw' && vehicleCategory !== 'three-wheeler' && vehicleCategory !== 'bus' && !isElectric) fieldsToValidate.push('pucDoc');
         if (watch('hasGst') === 'yes') fieldsToValidate.push('gstNumber');
       } else if (step === 2) {
         fieldsToValidate = ['ownerName', 'ownerAddress', 'ownerMobile', 'ownerWhatsapp', 'ownerEmail', 'ownerPhoto', 'vehiclePhoto', 'isOwnerDriver'];
@@ -228,6 +230,17 @@ export default function RegistrationPage() {
     return (
       <div className="min-h-screen bg-stone-50 py-12 px-4 sm:px-6 lg:px-8">
         <RegistrationTypeSelector onSelect={handleSelectType} />
+      </div>
+    );
+  }
+
+  if (type === 'vehicle') {
+    return (
+      <div className="min-h-screen bg-stone-50 py-12 px-4 sm:px-6 lg:px-8">
+        <VehicleCategorySelector 
+          onSelect={(category) => setSearchParams({ type: category })} 
+          onBack={() => setSearchParams({})} 
+        />
       </div>
     );
   }

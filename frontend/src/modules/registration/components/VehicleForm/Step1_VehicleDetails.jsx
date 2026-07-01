@@ -6,7 +6,9 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
   const isPickup = vehicleCategory === 'pickup';
   const isBus = vehicleCategory === 'bus';
   const isERickshaw = vehicleCategory === 'e-rickshaw' || vehicleCategory === 'three-wheeler';
+  const isBike = vehicleCategory === 'bike';
 
+  const vehicleType = watch('vehicleType');
   const commercialPermit = watch('commercialPermit');
   const isFinanced = watch('financed');
   const carrier = watch('carrier');
@@ -19,7 +21,7 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
         {/* Vehicle Category Dropdown */}
         <div className="space-y-2 md:col-span-2">
           <label className="block text-sm font-bold text-stone-850">
-            Vehicle Type / Category <span className="text-red-500">*</span>
+            Vehicle Category <span className="text-red-500">*</span>
           </label>
           <select
             className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 text-sm font-semibold bg-white focus:outline-none focus:ring-4 focus:ring-accent/15 focus:border-accent cursor-pointer ${
@@ -29,6 +31,8 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
             onChange={(e) => {
               setValue('vehicleCategory', e.target.value, { shouldValidate: true });
               // Clear fields that are conditional on category
+              setValue('vehicleType', '');
+              setValue('customVehicleType', '');
               setValue('fuelType', '');
               setValue('seatingCapacity', '');
               setValue('loadCapacity', '');
@@ -36,12 +40,93 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
               setValue('carrier', 'no');
             }}
           >
+            <option value="bike">Bike (Motorcycle, Scooter)</option>
             <option value="four-wheeler">4-Wheeler (Hatchbacks, Sedans, SUVs, Cabs)</option>
             <option value="three-wheeler">3-Wheeler (Auto Rickshaws, E-Rickshaws)</option>
             <option value="pickup">Pickup (Loading Trucks, Commercial Carriers)</option>
             <option value="bus">Bus (Mini-buses, Coaches)</option>
           </select>
         </div>
+
+        {/* Vehicle Type Dropdown */}
+        <div className="space-y-2">
+          <label className="block text-sm font-bold text-stone-850">
+            Vehicle Type <span className="text-red-500">*</span>
+          </label>
+          <select
+            className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 text-sm font-semibold bg-white focus:outline-none focus:ring-4 focus:ring-accent/15 focus:border-accent cursor-pointer ${
+              errors.vehicleType ? 'border-red-400 bg-red-50/10' : 'border-stone-200 hover:border-stone-300'
+            }`}
+            {...register('vehicleType', { required: 'Vehicle type is required' })}
+            onChange={(e) => {
+              setValue('vehicleType', e.target.value, { shouldValidate: true });
+              if (e.target.value !== 'other') {
+                setValue('customVehicleType', '');
+              }
+            }}
+          >
+            <option value="">Select Vehicle Type</option>
+            {isBike && (
+              <>
+                <option value="motorcycle">Motorcycle / Bike</option>
+                <option value="scooter">Scooter / Scooty</option>
+                <option value="electric-bike">Electric Two-Wheeler</option>
+                <option value="other">Other</option>
+              </>
+            )}
+            {isERickshaw && (
+              <>
+                <option value="auto-rickshaw">Auto Rickshaw</option>
+                <option value="e-rickshaw">E-Rickshaw</option>
+                <option value="other">Other</option>
+              </>
+            )}
+            {vehicleCategory === 'four-wheeler' && (
+              <>
+                <option value="hatchback">Hatchback</option>
+                <option value="sedan">Sedan</option>
+                <option value="suv">SUV</option>
+                <option value="cab-taxi">Cab / Taxi</option>
+                <option value="other">Other</option>
+              </>
+            )}
+            {vehicleCategory === 'pickup' && (
+              <>
+                <option value="mini-truck">Mini Truck</option>
+                <option value="pickup-truck">Pickup Truck</option>
+                <option value="other">Other</option>
+              </>
+            )}
+            {vehicleCategory === 'bus' && (
+              <>
+                <option value="mini-bus">Mini Bus</option>
+                <option value="coach">Luxury Coach</option>
+                <option value="other">Other</option>
+              </>
+            )}
+          </select>
+          {errors.vehicleType && <p className="text-xs font-bold text-red-500">{errors.vehicleType.message}</p>}
+        </div>
+
+        {/* Custom Vehicle Type Input */}
+        {vehicleType === 'other' ? (
+          <div className="space-y-2">
+            <label className="block text-sm font-bold text-stone-850">
+              Specify Vehicle Type <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. Loader Rickshaw, Electric Cart"
+              className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-accent/15 focus:border-accent ${
+                errors.customVehicleType ? 'border-red-400 bg-red-50/10' : 'border-stone-200 hover:border-stone-300'
+              }`}
+              {...register('customVehicleType', { required: vehicleType === 'other' ? 'Please specify your vehicle type' : false })}
+            />
+            {errors.customVehicleType && <p className="text-xs font-bold text-red-500">{errors.customVehicleType.message}</p>}
+          </div>
+        ) : (
+          <div className="hidden md:block" />
+        )}
         
         {/* Vehicle Number */}
         <div className="space-y-2">
@@ -163,6 +248,7 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
               <option value="petrol">Petrol</option>
               <option value="diesel">Diesel</option>
               <option value="cng">CNG</option>
+              <option value="electric">Electric</option>
               <option value="petrol_cng">Petrol & CNG</option>
               <option value="diesel_cng">Diesel & CNG</option>
             </select>
@@ -178,7 +264,7 @@ export default function Step1_VehicleDetails({ register, errors, type, watch, se
             </label>
             <input
               type="number"
-              placeholder={isBus ? "e.g. 40" : isERickshaw ? "e.g. 4" : "e.g. 5"}
+              placeholder={isBus ? "e.g. 40" : isERickshaw ? "e.g. 4" : isBike ? "e.g. 2" : "e.g. 5"}
               className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-accent/15 focus:border-accent ${
                 errors.seatingCapacity ? 'border-red-400 bg-red-50/10' : 'border-stone-200 hover:border-stone-300'
               }`}

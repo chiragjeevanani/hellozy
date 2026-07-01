@@ -34,7 +34,7 @@ export default function RegistrationDetailPanel({ selected, onClose, onUpdateSta
     </div>
   );
 
-  const isVehicle = ['four-wheeler', 'pickup', 'bus', 'three-wheeler', 'e-rickshaw'].includes(selected.type);
+  const isVehicle = ['four-wheeler', 'pickup', 'bus', 'three-wheeler', 'e-rickshaw', 'bike'].includes(selected.type);
 
   return (
     <div className="bg-white border border-stone-250 rounded-3xl p-6 shadow-md flex flex-col h-full overflow-hidden text-left">
@@ -84,7 +84,8 @@ export default function RegistrationDetailPanel({ selected, onClose, onUpdateSta
           
           {isVehicle && (
             <>
-              {renderDetailField("Vehicle Type", selected.type)}
+              {renderDetailField("Vehicle Category", selected.type?.replace('-', ' ').toUpperCase())}
+              {selected.vehicleType && renderDetailField("Vehicle Type / Model", selected.vehicleType === 'other' ? selected.customVehicleType : selected.vehicleType.replace('-', ' ').toUpperCase())}
               {renderDetailField("Vehicle Number", selected.vehicleNumber)}
               {renderDetailField("Make / Brand", selected.makeName)}
               {renderDetailField("Model / Variant", selected.modelNumber)}

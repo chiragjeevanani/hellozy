@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Calendar, Users, TrendingUp, Settings, LogOut, X, Building2 } from 'lucide-react';
+import { LayoutDashboard, Calendar, Users, TrendingUp, Settings, LogOut, X, Building2, FileText } from 'lucide-react';
 
 export default function OrganizerSidebar({ isOpen, toggleSidebar, onLogout, organizer }) {
   const location = useLocation();
@@ -9,6 +9,7 @@ export default function OrganizerSidebar({ isOpen, toggleSidebar, onLogout, orga
   const menuItems = [
     { label: 'Overview', path: '/organizer', icon: LayoutDashboard },
     { label: 'Host & My Events', path: '/organizer/events', icon: Calendar },
+    { label: 'Event Requests', path: '/organizer/proposals', icon: FileText },
     { label: 'Applicants', path: '/organizer/applicants', icon: Users },
     { label: 'My Earnings', path: '/organizer/earnings', icon: TrendingUp },
     { label: 'Settings', path: '/organizer/settings', icon: Settings },

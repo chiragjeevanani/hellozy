@@ -69,6 +69,7 @@ export default function Step5_Review({ watch, onEditStep, type, paymentEnabled }
       >
         <div className="space-y-3">
           {values.vehicleCategory && renderField("Vehicle Category", values.vehicleCategory.replace('-', ' ').toUpperCase(), true)}
+          {values.vehicleType && renderField("Vehicle Type", values.vehicleType === 'other' ? (values.customVehicleType || 'Other') : values.vehicleType.replace('-', ' ').toUpperCase(), true)}
           {renderField("Vehicle Number", values.vehicleNumber, true)}
           {renderField("Make / Brand", values.makeName, true)}
           {renderField("Model / Variant", values.modelNumber, false)}

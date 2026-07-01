@@ -73,10 +73,11 @@ export default function RegistrationTable({ registrations, onSelectRow, selected
             onChange={(e) => setFilterType(e.target.value)}
           >
             <option value="all">All Types</option>
+            <option value="bike">Bike</option>
+            <option value="three-wheeler">3-Wheeler</option>
             <option value="four-wheeler">4-Wheeler</option>
             <option value="pickup">Pickup</option>
             <option value="bus">Bus</option>
-            <option value="three-wheeler">3-Wheeler</option>
             <option value="hospital">Hospital</option>
             <option value="influencer">Influencer</option>
           </select>

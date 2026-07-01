@@ -80,10 +80,11 @@ export default function DashboardPage() {
 
   // Format data for Recharts
   const chartData = [
+    { name: 'Bike', count: typeCounts['bike'] || 0 },
+    { name: '3-Wheeler', count: (typeCounts['three-wheeler'] || 0) + (typeCounts['e-rickshaw'] || 0) },
     { name: '4-Wheeler', count: typeCounts['four-wheeler'] || 0 },
     { name: 'Pickup', count: typeCounts['pickup'] || 0 },
     { name: 'Bus', count: typeCounts['bus'] || 0 },
-    { name: '3-Wheeler', count: (typeCounts['three-wheeler'] || 0) + (typeCounts['e-rickshaw'] || 0) },
     { name: 'Hospital', count: typeCounts['hospital'] || 0 },
     { name: 'Influencer', count: typeCounts['influencer'] || 0 },
   ];

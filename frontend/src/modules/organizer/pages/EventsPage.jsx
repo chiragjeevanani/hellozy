@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { getEvents, saveEvent, getEventTypes } from '../../registration/utils/registrationStore';
+import { useSearchParams } from 'react-router-dom';
+import { getEvents, saveEvent, getEventTypes, updateEvent } from '../../registration/utils/registrationStore';
 import { Calendar, Plus, Tag, MapPin, Plane, ShieldCheck, Upload } from 'lucide-react';
 
 export default function EventsPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const editId = searchParams.get('edit');
   const [organizer, setOrganizer] = useState(null);
   const [events, setEvents] = useState([]);
   const [eventTypes, setEventTypes] = useState([]);
@@ -34,6 +37,9 @@ export default function EventsPage() {
   const [eventImage, setEventImage] = useState(null);
   const [imageOrientation, setImageOrientation] = useState('landscape'); // landscape or portrait
 
+  // Edit mode state
+  const [editingEventId, setEditingEventId] = useState(null);
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -60,6 +66,63 @@ export default function EventsPage() {
     }
   }, []);
 
+  const handleStartEdit = (evt) => {
+    setEditingEventId(evt.id);
+    setEventTitle(evt.title || '');
+    setEventType(evt.eventType || '');
+    setEventDesc(evt.description || '');
+    setFacilities(evt.facilities || '');
+    setMinSponsor(String(evt.minSponsorAmount || 0));
+    setEventDate(evt.eventDate || '');
+    setEventLocation(evt.eventLocation || '');
+    setRequirePassport(evt.requirePassport || false);
+    setRequireTravel(evt.requireTravel || false);
+    setEventImage(evt.eventImage || null);
+    setImageOrientation(evt.imageOrientation || 'landscape');
+    
+    const roles = { Participate: false, Visitor: false, Couple: false, Sponsor: false };
+    evt.bookingRoles?.forEach(r => {
+      roles[r] = true;
+    });
+    setEnabledRoles(roles);
+    
+    setRolePricing({
+      Participate: evt.rolePricing?.Participate ?? 500,
+      Visitor: evt.rolePricing?.Visitor ?? 200,
+      Couple: evt.rolePricing?.Couple ?? 800,
+      Sponsor: 0
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingEventId(null);
+    setSearchParams({});
+    setEventTitle('');
+    setEventDesc('');
+    setFacilities('');
+    setMinSponsor('0');
+    setEventDate('');
+    setEventLocation('');
+    setRequirePassport(false);
+    setRequireTravel(true);
+    setEnabledRoles({ Participate: true, Visitor: true, Couple: true, Sponsor: true });
+    setRolePricing({ Participate: 500, Visitor: 200, Couple: 800, Sponsor: 0 });
+    setEventImage(null);
+    setImageOrientation('landscape');
+    setFormError('');
+  };
+
+  useEffect(() => {
+    if (editId && events.length > 0) {
+      const eventToEdit = events.find(e => e.id === editId);
+      if (eventToEdit && eventToEdit.status === 'Needs Revision') {
+        handleStartEdit(eventToEdit);
+      }
+    }
+  }, [editId, events]);
+
   const handleHostEvent = (e) => {
     e.preventDefault();
     if (!eventTitle || !eventDesc || !eventType || !eventDate || !eventLocation) {
@@ -73,7 +136,7 @@ export default function EventsPage() {
       return;
     }
 
-    const newEvent = {
+    const eventData = {
       organizerId: organizer.id,
       organizerName: organizer.ownerName,
       title: eventTitle,
@@ -94,9 +157,22 @@ export default function EventsPage() {
       imageOrientation
     };
 
-    const saved = saveEvent(newEvent);
-    if (saved) {
-      setFormSuccess('Event successfully hosted!');
+    let result;
+    if (editingEventId) {
+      result = updateEvent({
+        id: editingEventId,
+        status: 'Pending',
+        resendReason: '',
+        ...eventData
+      });
+    } else {
+      result = saveEvent(eventData);
+    }
+
+    if (result) {
+      setFormSuccess(editingEventId ? 'Event successfully resubmitted!' : 'Event successfully hosted!');
+      setEditingEventId(null);
+      setSearchParams({});
       const allEvents = getEvents().filter(e => e.organizerId === organizer.id);
       setEvents(allEvents);
 
@@ -119,7 +195,7 @@ export default function EventsPage() {
         setFormSuccess('');
       }, 3000);
     } else {
-      setFormError('Failed to host event.');
+      setFormError('Failed to save event.');
     }
   };
 
@@ -304,9 +380,20 @@ export default function EventsPage() {
               </div>
             </div>
 
-            <button type="submit" className="w-full py-2.5 bg-primary hover:bg-primary-light text-white font-bold rounded-xl transition-all cursor-pointer shadow-xs">
-              Host Active Event
-            </button>
+            {editingEventId ? (
+              <div className="flex gap-2">
+                <button type="submit" className="flex-grow py-2.5 bg-accent hover:bg-accent-hover text-white font-bold rounded-xl transition-all cursor-pointer shadow-xs">
+                  Update & Resubmit
+                </button>
+                <button type="button" onClick={handleCancelEdit} className="px-3 py-2.5 border border-stone-200 text-stone-605 font-bold rounded-xl hover:bg-stone-50 transition-all cursor-pointer">
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button type="submit" className="w-full py-2.5 bg-primary hover:bg-primary-light text-white font-bold rounded-xl transition-all cursor-pointer shadow-xs">
+                Host Active Event
+              </button>
+            )}
           </form>
         </div>
 
@@ -330,7 +417,17 @@ export default function EventsPage() {
                       </div>
                     )}
                     <div className="flex justify-between items-start gap-2">
-                      <span className="inline-block px-2.5 py-0.5 bg-stone-100 border border-stone-200 text-stone-500 rounded text-[9px] font-bold uppercase">{evt.eventType}</span>
+                      <div className="flex flex-wrap gap-1 items-center">
+                        <span className="inline-block px-2.5 py-0.5 bg-stone-100 border border-stone-200 text-stone-500 rounded text-[9px] font-bold uppercase">{evt.eventType}</span>
+                        <span className={`inline-block px-2 py-0.5 border rounded text-[9px] font-bold uppercase ${
+                          evt.status === 'Approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                          evt.status === 'Rejected' ? 'bg-red-50 text-red-700 border-red-200' :
+                          evt.status === 'Needs Revision' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+                          'bg-stone-50 text-stone-600 border-stone-200'
+                        }`}>
+                          {evt.status || 'Pending'}
+                        </span>
+                      </div>
                       <div className="flex gap-1.5">
                         {evt.requireTravel && <span className="p-1 rounded bg-stone-200/50 text-stone-650" title="Travel details required"><Plane size={10} /></span>}
                         {evt.requirePassport && <span className="p-1 rounded bg-accent/10 text-accent" title="Passport required"><ShieldCheck size={10} /></span>}
@@ -338,6 +435,13 @@ export default function EventsPage() {
                     </div>
                     <h4 className="font-bold text-stone-900 text-sm leading-snug">{evt.title}</h4>
                     <p className="text-stone-550 leading-relaxed text-[11px] line-clamp-3">{evt.description}</p>
+                    
+                    {evt.status === 'Needs Revision' && evt.resendReason && (
+                      <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-[10px] text-amber-800 leading-normal font-semibold">
+                        <span className="font-bold text-amber-700 block uppercase tracking-wider text-[8px]">Revision Comments:</span>
+                        {evt.resendReason}
+                      </div>
+                    )}
                     
                     {/* Date and Location row */}
                     <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] text-stone-450 font-bold pt-1">
@@ -362,6 +466,15 @@ export default function EventsPage() {
                       <span>ID: {evt.id}</span>
                       <span>{new Date(evt.createdAt).toLocaleDateString()}</span>
                     </div>
+                    {evt.status === 'Needs Revision' && (
+                      <button
+                        type="button"
+                        onClick={() => handleStartEdit(evt)}
+                        className="w-full mt-2 py-1.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg transition-colors text-center cursor-pointer border-none text-[10px]"
+                      >
+                        Edit & Refill Details
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
